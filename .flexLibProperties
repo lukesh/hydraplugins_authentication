@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexLibProperties version="1">
+  <includeClasses>
+    <classEntry path="com.hydraframework.plugins.authentication.controller.RoleRetrieveCommand"/>
+    <classEntry path="com.hydraframework.plugins.authentication.controller.InformationRetrieveCommand"/>
+    <classEntry path="com.hydraframework.plugins.authentication.controller.RestrictionRetrieveCommand"/>
+    <classEntry path="com.hydraframework.plugins.authentication.model.IdentityProxy"/>
+    <classEntry path="com.hydraframework.plugins.authentication.data.delegates.MockIdentityDelegate"/>
+    <classEntry path="com.hydraframework.plugins.authentication.controller.LoginCommand"/>
+    <classEntry path="com.hydraframework.plugins.authentication.controller.LogoutCommand"/>
+    <classEntry path="com.hydraframework.plugins.authentication.data.descriptors.LoginInformation"/>
+    <classEntry path="com.hydraframework.plugins.authentication.controller.RoleCheckCommand"/>
+    <classEntry path="com.hydraframework.plugins.authentication.AuthenticationManager"/>
+  </includeClasses>
+  <includeResources/>
+  <namespaceManifests/>
+</flexLibProperties>
