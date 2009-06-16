@@ -2,12 +2,12 @@ package com.hydraframework.plugins.authentication.data.interfaces
 {
 	import mx.rpc.AsyncToken;
 	
+	import com.hydraframework.plugins.authentication.data.descriptors.LoginInformation;
+	
 	public interface IIdentityDelegate
 	{
-		function login(password:String):AsyncToken;
+		function retrieveInformation(userId:String):AsyncToken;
+		function login(loginInfo:ILoginInformation):AsyncToken;
 		function logout():AsyncToken;
-		function retrieveRoles():AsyncToken;
-		function retrieveInformation():AsyncToken;
-		function retrieveDataRestrictions():AsyncToken;
 	}
 }

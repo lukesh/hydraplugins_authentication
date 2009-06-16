@@ -3,8 +3,8 @@ package com.hydraframework.plugins.authentication.controller
 	import com.hydraframework.core.mvc.events.Notification;
 	import com.hydraframework.core.mvc.interfaces.IFacade;
 	import com.hydraframework.core.mvc.patterns.command.SimpleCommand;
-	import com.hydraframework.plugins.authentication.data.interfaces.IIdentityDelegate;
-	import com.hydraframework.plugins.authentication.model.IdentityProxy;
+	import com.hydraframework.plugins.authentication.data.interfaces.*;
+	import com.hydraframework.plugins.authentication.model.*;
 	
 	import flash.utils.Dictionary;
 	
@@ -13,14 +13,14 @@ package com.hydraframework.plugins.authentication.controller
 
 	public class RestrictionRetrieveCommand extends SimpleCommand implements IResponder
 	{
-		public function get delegate():IIdentityDelegate
+		public function get delegate():IPrincipalDelegate
 		{
-			return this.facade.retrieveDelegate(IIdentityDelegate) as IIdentityDelegate;
+			return this.facade.retrieveDelegate(IPrincipalDelegate) as IPrincipalDelegate;
 		}
 
-		public function get proxy():IdentityProxy
+		public function get proxy():PrincipalProxy
 		{
-			return IdentityProxy(this.facade.retrieveProxy(IdentityProxy.NAME));
+			return PrincipalProxy(this.facade.retrieveProxy(PrincipalProxy.NAME));
 		}
 
 		public function RestrictionRetrieveCommand(facade:IFacade)

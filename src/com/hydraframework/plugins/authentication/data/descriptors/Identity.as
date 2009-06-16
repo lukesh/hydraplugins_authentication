@@ -27,18 +27,6 @@ package com.hydraframework.plugins.authentication.data.descriptors
 			_userId = value;
 		}
 		
-		private var _loginId:String;
-		
-		public function get loginId():String
-		{
-			return _loginId;
-		}
-		
-		public function set loginId(value:String):void
-		{
-			_loginId = value;
-		}
-		
 		private var _displayName:String;
 		
 		public function get displayName():String
@@ -63,57 +51,18 @@ package com.hydraframework.plugins.authentication.data.descriptors
 			_attributes = value;
 		}
 		
-		private var _loggedIn:Boolean = false;
+		private var _isAuthenticated:Boolean = false;
 		
-		public function get loggedIn():Boolean
+		public function get isAuthenticated():Boolean
 		{
-			return _loggedIn;
+			return _isAuthenticated;
 		}
 		
-		public function set loggedIn(value:Boolean):void
+		public function set isAuthenticated(value:Boolean):void
 		{
-			_loggedIn = value;
+			_isAuthenticated = value;
 		}
 
-		private var _roles:ArrayCollection;
-		
-		public function get roles():ArrayCollection
-		{
-			return _roles;
-		}
-		
-		public function set roles(value:ArrayCollection):void
-		{
-			_roles = value;
-		}
-		
-		private var _dataRestrictions:Dictionary;
-		
-		public function get dataRestrictions():Dictionary
-		{
-			return _dataRestrictions;
-		}
-		
-		public function set dataRestrictions(value:Dictionary):void
-		{
-			_dataRestrictions = value;
-		}
-		
-		public function isInRole(roleName:String):Boolean
-		{
-			if (roles.toArray().indexOf(roleName) != -1)
-			{
-				return true;
-			}
-			
-			return false;
-		}
-		
-		public function getDataRestrictionValues(restrictionName:String):ArrayCollection
-		{
-			return dataRestrictions[restrictionName];
-		}
-		
 		public function getAttribute(attributeName:String):Object
 		{
 			return attributes[attributeName];
@@ -121,10 +70,7 @@ package com.hydraframework.plugins.authentication.data.descriptors
 		
 		public function clear():void
 		{
-			_roles = null;
-			_dataRestrictions = null;
 			_attributes = null;
-			_loginId = null;
 			_displayName = null;
 			_userId = null;
 		}

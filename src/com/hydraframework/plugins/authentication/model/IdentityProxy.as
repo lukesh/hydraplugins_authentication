@@ -9,22 +9,21 @@ package com.hydraframework.plugins.authentication.model
 	
 	import flash.utils.Dictionary;
 	
-	import mx.collections.ArrayCollection;
 
 	public class IdentityProxy extends Proxy
 	{
-		public static const NAME:String = "UserProxy";
+		public static const NAME:String = "IdentityProxy";
 
 		private var _identity:IIdentity;
 		
 		/**
 		 * @private
-		 * Cached instance of the AuthenticationManager.
+		 * Cached instance of the IdentityProxy.
 		 */
 		private static const _instance:IdentityProxy = new IdentityProxy();
 
 		/**
-		 * Returns a cached instance of the AuthenticationManager.
+		 * Returns a cached instance of the IdentityProxy.
 		 */
 		public static function getInstance():IdentityProxy {
 			return _instance;
@@ -36,15 +35,10 @@ package com.hydraframework.plugins.authentication.model
 			_identity = new Identity();
 		}
 		
-		public function setLoginId(loginId:String):void
+		public function logIn(identity:IIdentity):void
 		{
-			logOut();
-			_identity.loginId = loginId;
-		}
-		
-		public function logIn():void
-		{
-			_identity.loggedIn = true;
+			_identity = identity;
+			_identity.isAuthenticated = true;
 			this.sendNotification(new Notification(AuthenticationManager.LOGIN, null, Phase.RESPONSE));
 		}
 		
@@ -56,25 +50,7 @@ package com.hydraframework.plugins.authentication.model
 		
 		public function isLoggedOn():Boolean
 		{
-			return _identity.loggedIn;
-		}
-		
-		public function setRoles(roles:ArrayCollection):void
-		{
-			_identity.roles = roles;
-			this.sendNotification(new Notification(AuthenticationManager.ROLE_RETRIEVE, null, Phase.RESPONSE));
-		}
-		
-		public function setDataRestrictions(dataRestrictions:Dictionary):void
-		{
-			_identity.dataRestrictions = dataRestrictions;			
-			this.sendNotification(new Notification(AuthenticationManager.RESTRICTION_RETRIEVE, null, Phase.RESPONSE));
-		}
-		
-		public function checkRole(role:String):void
-		{
-			var isInRole:Boolean = _identity.isInRole(role);
-			this.sendNotification(new Notification(AuthenticationManager.ROLE_CHECK, isInRole, Phase.RESPONSE));
+			return _identity.isAuthenticated;
 		}
 		
 		

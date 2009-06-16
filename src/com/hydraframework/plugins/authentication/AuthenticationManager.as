@@ -2,17 +2,19 @@ package com.hydraframework.plugins.authentication
 {
 	import com.hydraframework.core.mvc.patterns.plugin.Plugin;
 	import com.hydraframework.plugins.authentication.controller.*;
+	import com.hydraframework.plugins.authentication.data.descriptors.Principal;
+	import com.hydraframework.plugins.authentication.data.interfaces.IIdentity;
 	import com.hydraframework.plugins.authentication.model.IdentityProxy;
+	import com.hydraframework.plugins.authentication.model.PrincipalProxy;
 	
 	public class AuthenticationManager extends Plugin
 	{
 		public static const NAME:String = "AuthenticationManager";
 		public static const LOGIN:String = "plugins.authentication.login";
 		public static const LOGOUT:String = "plugins.authentication.logout";
-		public static const LOGINID_SET:String = "plugins.authentication.loginidSet";
 		public static const ROLE_RETRIEVE:String = "plugins.authentication.roleRetrieve";
 		public static const RESTRICTION_RETRIEVE:String = "plugins.authentication.restrictionRetrieve";
-		public static const INFORMATION_RETRIEVE:String = "plugins.authentication.informationRetrieve";
+		public static const IDENTITY_RETRIEVE:String = "plugins.authentication.identityRetrieve";
 		public static const ROLE_CHECK:String = "plugins.authentication.roleCheck";
 		
 		/**
@@ -20,6 +22,7 @@ package com.hydraframework.plugins.authentication
 		 * Cached instance of the AuthenticationManager.
 		 */
 		private static const _instance:AuthenticationManager = new AuthenticationManager();
+		private var _currentUser:Principal = new Principal();
 
 		/**
 		 * Returns a cached instance of the AuthenticationManager.
@@ -39,6 +42,7 @@ package com.hydraframework.plugins.authentication
 			   Proxies
 			 */
 			this.facade.registerProxy(IdentityProxy.getInstance());
+			this.facade.registerProxy(PrincipalProxy.getInstance());
 			/*
 			   Commands
 			 */
@@ -47,12 +51,19 @@ package com.hydraframework.plugins.authentication
 			this.facade.registerCommand(AuthenticationManager.ROLE_CHECK, RoleCheckCommand);
 			this.facade.registerCommand(AuthenticationManager.ROLE_RETRIEVE, RoleRetrieveCommand);
 			this.facade.registerCommand(AuthenticationManager.RESTRICTION_RETRIEVE, RestrictionRetrieveCommand);
-			this.facade.registerCommand(AuthenticationManager.INFORMATION_RETRIEVE, InformationRetrieveCommand);
+			this.facade.registerCommand(AuthenticationManager.IDENTITY_RETRIEVE, IdentityRetrieveCommand);
 		}
 		
 		public function isLoggedOn():Boolean
 		{
 			return IdentityProxy.getInstance().isLoggedOn();
 		}
+		
+//		public function identity():IIdentity
+//		{
+//			return IdentityProxy
+//		}
+//		
+
 	}
 }
