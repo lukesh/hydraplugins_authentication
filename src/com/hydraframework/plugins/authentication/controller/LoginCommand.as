@@ -41,9 +41,9 @@ package com.hydraframework.plugins.authentication.controller
 		}
 		
 		public function result(data:Object):void {
-			if (!(data.result))
+			if (data.result)
 			{
-				this.proxy.logIn(IIdentity(data.Result));
+				this.proxy.logIn(IIdentity(data.result));
 			}
 		}
 		

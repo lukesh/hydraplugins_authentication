@@ -4,8 +4,10 @@ package com.hydraframework.plugins.authentication.model
 	import com.hydraframework.core.mvc.events.Phase;
 	import com.hydraframework.core.mvc.patterns.proxy.Proxy;
 	import com.hydraframework.plugins.authentication.AuthenticationManager;
-	import com.hydraframework.plugins.authentication.data.interfaces.IPrincipal;
+	import com.hydraframework.plugins.authentication.data.descriptors.Identity;
+	import com.hydraframework.plugins.authentication.data.descriptors.Principal;
 	import com.hydraframework.plugins.authentication.data.interfaces.IIdentity;
+	import com.hydraframework.plugins.authentication.data.interfaces.IPrincipal;
 	
 	import flash.utils.Dictionary;
 	
@@ -31,6 +33,8 @@ package com.hydraframework.plugins.authentication.model
 		public function PrincipalProxy(data:Object=null)
 		{
 			super(NAME, data);
+			_principal = new Principal();
+			_principal.identity = new Identity();
 		}
 		
 		private var _principal:IPrincipal;
@@ -61,7 +65,7 @@ package com.hydraframework.plugins.authentication.model
 		{
 			if (!_principal.rolesLoaded)
 			{
-		
+				
 			}
 			
 			var isInRole:Boolean = _principal.isInRole(role);
