@@ -5,6 +5,7 @@ package com.hydraframework.plugins.authentication.model
 	import com.hydraframework.core.mvc.patterns.proxy.Proxy;
 	import com.hydraframework.plugins.authentication.AuthenticationManager;
 	import com.hydraframework.plugins.authentication.data.interfaces.IPrincipal;
+	import com.hydraframework.plugins.authentication.data.interfaces.IIdentity;
 	
 	import flash.utils.Dictionary;
 	
@@ -33,7 +34,17 @@ package com.hydraframework.plugins.authentication.model
 		}
 		
 		private var _principal:IPrincipal;
+		
+		public function get identity():IIdentity
+		{
+			return _principal.identity;
+		}
 
+		public function set identity(value:IIdentity):void
+		{
+			_principal.identity = value;
+		}
+		
 		public function setRoles(roles:ArrayCollection):void
 		{
 			_principal.roles = roles;
@@ -56,6 +67,22 @@ package com.hydraframework.plugins.authentication.model
 			var isInRole:Boolean = _principal.isInRole(role);
 			this.sendNotification(new Notification(AuthenticationManager.ROLE_CHECK, isInRole, Phase.RESPONSE));
 		}
+		
+		public function logIn(identity:IIdentity):void
+		{
+			_principal.clear();
+			_principal.identity = identity;
+			_principal.identity.isAuthenticated = true;
+			this.sendNotification(new Notification(AuthenticationManager.LOGIN, null, Phase.RESPONSE));
+		}
+		
+		public function logOut():void
+		{
+			_principal.clear();
+			this.sendNotification(new Notification(AuthenticationManager.LOGOUT, null, Phase.RESPONSE));
+		}
+		
+
 	}
 	
 }

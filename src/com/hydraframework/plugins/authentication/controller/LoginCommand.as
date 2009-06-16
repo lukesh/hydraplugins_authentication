@@ -7,7 +7,7 @@ package com.hydraframework.plugins.authentication.controller
 	import com.hydraframework.plugins.authentication.data.interfaces.IIdentityDelegate;
 	import com.hydraframework.plugins.authentication.data.interfaces.ILoginInformation;
 	import com.hydraframework.plugins.authentication.data.interfaces.IIdentity;
-	import com.hydraframework.plugins.authentication.model.IdentityProxy;
+	import com.hydraframework.plugins.authentication.model.PrincipalProxy;
 	
 	import mx.rpc.AsyncToken;
 	import mx.rpc.IResponder;
@@ -19,9 +19,9 @@ package com.hydraframework.plugins.authentication.controller
 			return this.facade.retrieveDelegate(IIdentityDelegate) as IIdentityDelegate;
 		}
 
-		public function get proxy():IdentityProxy
+		public function get proxy():PrincipalProxy
 		{
-			return IdentityProxy(this.facade.retrieveProxy(IdentityProxy.NAME));
+			return PrincipalProxy(this.facade.retrieveProxy(PrincipalProxy.NAME));
 		}
 
 		public function LoginCommand(facade:IFacade)

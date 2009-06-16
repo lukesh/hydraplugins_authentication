@@ -66,6 +66,16 @@ package com.hydraframework.plugins.authentication.data.descriptors
 		
 		private var _dataRestrictionsLoaded:Boolean = false;
 		
+		public function get dataRestrictionsLoaded():Boolean
+		{
+			return _dataRestrictionsLoaded;
+		}
+		
+		public function set dataRestrictionsLoaded(value:Boolean):void
+		{
+			_dataRestrictionsLoaded = value;
+		}
+
 		public function isInRole(roleName:String):Boolean
 		{
 			if (roles.toArray().indexOf(roleName) != -1)
@@ -81,11 +91,13 @@ package com.hydraframework.plugins.authentication.data.descriptors
 			return dataRestrictions[restrictionName];
 		}
 		
-		
 		public function clear():void
 		{
 			_roles = null;
 			_dataRestrictions = null;
+			_rolesLoaded = false;
+			_dataRestrictionsLoaded = false;
+			_identity.clear();
 		}
 	}
 }

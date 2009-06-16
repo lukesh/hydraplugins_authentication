@@ -22,7 +22,6 @@ package com.hydraframework.plugins.authentication
 		 * Cached instance of the AuthenticationManager.
 		 */
 		private static const _instance:AuthenticationManager = new AuthenticationManager();
-		private var _currentUser:Principal = new Principal();
 
 		/**
 		 * Returns a cached instance of the AuthenticationManager.

@@ -7,20 +7,18 @@ package com.hydraframework.plugins.authentication.model
 	import com.hydraframework.plugins.authentication.data.descriptors.Identity;
 	import com.hydraframework.plugins.authentication.data.interfaces.IIdentity;
 	
-	import flash.utils.Dictionary;
-	
 
 	public class IdentityProxy extends Proxy
 	{
 		public static const NAME:String = "IdentityProxy";
 
-		private var _identity:IIdentity;
-		
 		/**
 		 * @private
 		 * Cached instance of the IdentityProxy.
 		 */
 		private static const _instance:IdentityProxy = new IdentityProxy();
+
+		private var _identity:IIdentity;
 
 		/**
 		 * Returns a cached instance of the IdentityProxy.
@@ -32,20 +30,7 @@ package com.hydraframework.plugins.authentication.model
 		public function IdentityProxy()
 		{
 			super(NAME);
-			_identity = new Identity();
-		}
-		
-		public function logIn(identity:IIdentity):void
-		{
-			_identity = identity;
-			_identity.isAuthenticated = true;
-			this.sendNotification(new Notification(AuthenticationManager.LOGIN, null, Phase.RESPONSE));
-		}
-		
-		public function logOut():void
-		{
-			_identity.clear();
-			this.sendNotification(new Notification(AuthenticationManager.LOGOUT, null, Phase.RESPONSE));
+			_identity = PrincipalProxy.getInstance().identity;
 		}
 		
 		public function isLoggedOn():Boolean
