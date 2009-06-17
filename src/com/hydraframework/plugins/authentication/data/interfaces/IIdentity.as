@@ -4,6 +4,7 @@ package com.hydraframework.plugins.authentication.data.interfaces
 	
 	import mx.collections.ArrayCollection;
 	
+	[Bindable]
 	public interface IIdentity
 	{
 		function get userId():String;

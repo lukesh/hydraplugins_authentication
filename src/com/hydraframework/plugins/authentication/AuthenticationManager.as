@@ -4,6 +4,7 @@ package com.hydraframework.plugins.authentication
 	import com.hydraframework.plugins.authentication.controller.*;
 	import com.hydraframework.plugins.authentication.data.delegates.MockIdentityDelegate;
 	import com.hydraframework.plugins.authentication.data.delegates.MockPrincipalDelegate;
+	import com.hydraframework.plugins.authentication.data.interfaces.IIdentity;
 	import com.hydraframework.plugins.authentication.model.IdentityProxy;
 	import com.hydraframework.plugins.authentication.model.PrincipalProxy;
 	
@@ -16,6 +17,7 @@ package com.hydraframework.plugins.authentication
 		public static const RESTRICTION_RETRIEVE:String = "plugins.authentication.restrictionRetrieve";
 		public static const IDENTITY_RETRIEVE:String = "plugins.authentication.identityRetrieve";
 		public static const ROLE_CHECK:String = "plugins.authentication.roleCheck";
+		public static const LOGIN_COMPLETE:String = "plugins.authentication.loginComplete";
 		
 		/**
 		 * @private
@@ -58,9 +60,14 @@ package com.hydraframework.plugins.authentication
 			this.facade.registerCommand(AuthenticationManager.IDENTITY_RETRIEVE, IdentityRetrieveCommand);
 		}
 		
-		public function isLoggedOn():Boolean
+		public function get isLoggedOn():Boolean
 		{
-			return IdentityProxy.getInstance().isLoggedOn();
+			return PrincipalProxy.getInstance().identity.isAuthenticated;
+		}
+		
+		public function get identity():IIdentity
+		{
+			return PrincipalProxy.getInstance().identity;
 		}
 		
 //		public function identity():IIdentity

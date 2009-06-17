@@ -2,11 +2,10 @@ package com.hydraframework.plugins.authentication.data.descriptors
 {
 	import com.hydraframework.plugins.authentication.data.interfaces.IIdentity;
 	
+	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.IEventDispatcher;
 	import flash.utils.Dictionary;
-	
-	import mx.collections.ArrayCollection;
 
 	public class Identity extends EventDispatcher implements IIdentity
 	{
@@ -29,6 +28,7 @@ package com.hydraframework.plugins.authentication.data.descriptors
 		
 		private var _displayName:String;
 		
+		[Bindable(event="displayNameChange")]
 		public function get displayName():String
 		{
 			return _displayName;
@@ -37,6 +37,7 @@ package com.hydraframework.plugins.authentication.data.descriptors
 		public function set displayName(value:String):void
 		{
 			_displayName = value;
+			this.dispatchEvent(new Event("displayNameChange"));
 		}
 		
 		private var _attributes:Dictionary;
