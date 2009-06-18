@@ -9,7 +9,6 @@ package com.hydraframework.plugins.authentication.model
 	import com.hydraframework.plugins.authentication.data.interfaces.IIdentity;
 	import com.hydraframework.plugins.authentication.data.interfaces.IPrincipal;
 	
-	import flash.events.Event;
 	import flash.utils.Dictionary;
 	
 	import mx.collections.ArrayCollection;
@@ -79,7 +78,6 @@ package com.hydraframework.plugins.authentication.model
 			_principal.identity = identity;
 			_principal.identity.isAuthenticated = true;
 			this.sendNotification(new Notification(AuthenticationManager.LOGIN, null, Phase.RESPONSE));
-			this.dispatchEvent(new Event(AuthenticationManager.LOGIN_COMPLETE, true));
 		}
 		
 		public function logOut():void

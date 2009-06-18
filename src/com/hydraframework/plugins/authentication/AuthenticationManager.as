@@ -1,6 +1,7 @@
 package com.hydraframework.plugins.authentication
 {
 	import com.hydraframework.core.mvc.patterns.plugin.Plugin;
+	import com.hydraframework.core.mvc.events.Notification;
 	import com.hydraframework.plugins.authentication.controller.*;
 	import com.hydraframework.plugins.authentication.data.delegates.MockIdentityDelegate;
 	import com.hydraframework.plugins.authentication.data.delegates.MockPrincipalDelegate;
@@ -8,6 +9,8 @@ package com.hydraframework.plugins.authentication
 	import com.hydraframework.plugins.authentication.model.IdentityProxy;
 	import com.hydraframework.plugins.authentication.model.PrincipalProxy;
 	
+	import flash.events.Event;
+
 	public class AuthenticationManager extends Plugin
 	{
 		public static const NAME:String = "AuthenticationManager";
@@ -58,6 +61,19 @@ package com.hydraframework.plugins.authentication
 			this.facade.registerCommand(AuthenticationManager.ROLE_RETRIEVE, RoleRetrieveCommand);
 			this.facade.registerCommand(AuthenticationManager.RESTRICTION_RETRIEVE, RestrictionRetrieveCommand);
 			this.facade.registerCommand(AuthenticationManager.IDENTITY_RETRIEVE, IdentityRetrieveCommand);
+		}
+
+		override public function handleNotification(notification:Notification):void {
+			if (notification.isResponse())
+			{
+				switch(notification.name)
+				{
+					case AuthenticationManager.LOGIN:
+						this.dispatchEvent(new Event(AuthenticationManager.LOGIN_COMPLETE, true));
+						break;
+				}
+			}
+			
 		}
 		
 		public function get isLoggedOn():Boolean
