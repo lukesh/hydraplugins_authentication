@@ -1,15 +1,13 @@
 package com.hydraframework.plugins.authentication
 {
-	import com.hydraframework.core.mvc.patterns.plugin.Plugin;
 	import com.hydraframework.core.mvc.events.Notification;
+	import com.hydraframework.core.mvc.patterns.plugin.Plugin;
 	import com.hydraframework.plugins.authentication.controller.*;
 	import com.hydraframework.plugins.authentication.data.delegates.MockIdentityDelegate;
 	import com.hydraframework.plugins.authentication.data.delegates.MockPrincipalDelegate;
 	import com.hydraframework.plugins.authentication.data.interfaces.IIdentity;
 	import com.hydraframework.plugins.authentication.model.IdentityProxy;
 	import com.hydraframework.plugins.authentication.model.PrincipalProxy;
-	
-	import flash.events.Event;
 
 	public class AuthenticationManager extends Plugin
 	{
@@ -20,6 +18,7 @@ package com.hydraframework.plugins.authentication
 		public static const RESTRICTION_RETRIEVE:String = "plugins.authentication.restrictionRetrieve";
 		public static const IDENTITY_RETRIEVE:String = "plugins.authentication.identityRetrieve";
 		public static const ROLE_CHECK:String = "plugins.authentication.roleCheck";
+		public static const ROLE_CHECK_COMPLETE:String = "plugins.authentication.roleCheckComplete";
 		public static const LOGIN_COMPLETE:String = "plugins.authentication.loginComplete";
 		
 		/**
@@ -69,7 +68,10 @@ package com.hydraframework.plugins.authentication
 				switch(notification.name)
 				{
 					case AuthenticationManager.LOGIN:
-						this.dispatchEvent(new Event(AuthenticationManager.LOGIN_COMPLETE, true));
+						this.dispatchEvent(new AuthenticationEvent(AuthenticationManager.LOGIN_COMPLETE, Boolean(notification.body), true));
+						break;
+					case AuthenticationManager.ROLE_CHECK:
+						this.dispatchEvent(new AuthenticationEvent(AuthenticationManager.ROLE_CHECK_COMPLETE, Boolean(notification.body), true));
 						break;
 				}
 			}
@@ -86,11 +88,10 @@ package com.hydraframework.plugins.authentication
 			return PrincipalProxy.getInstance().identity;
 		}
 		
-//		public function identity():IIdentity
-//		{
-//			return IdentityProxy
-//		}
-//		
+		public function isInRole(roleName:String):Boolean
+		{
+			return PrincipalProxy.getInstance().principal.isInRole(roleName);
+		}
 
 	}
 }

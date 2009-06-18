@@ -39,6 +39,16 @@ package com.hydraframework.plugins.authentication.model
 		
 		private var _principal:IPrincipal;
 		
+		public function get principal():IPrincipal
+		{
+			return _principal;
+		}
+
+		public function set principal(value:IPrincipal):void
+		{
+			_principal = value;
+		}
+
 		public function get identity():IIdentity
 		{
 			return _principal.identity;
@@ -63,21 +73,25 @@ package com.hydraframework.plugins.authentication.model
 		
 		public function checkRole(role:String):void
 		{
-			if (!_principal.rolesLoaded)
-			{
-				
-			}
-			
 			var isInRole:Boolean = _principal.isInRole(role);
 			this.sendNotification(new Notification(AuthenticationManager.ROLE_CHECK, isInRole, Phase.RESPONSE));
 		}
 		
-		public function logIn(identity:IIdentity):void
+		public function logIn(data:Object):void
 		{
-			_principal.clear();
-			_principal.identity = identity;
-			_principal.identity.isAuthenticated = true;
-			this.sendNotification(new Notification(AuthenticationManager.LOGIN, null, Phase.RESPONSE));
+			if (data.result)
+			{
+				// success
+				_principal.clear();
+				_principal.identity = identity;
+				_principal.identity.isAuthenticated = true;
+				this.sendNotification(new Notification(AuthenticationManager.LOGIN, true, Phase.RESPONSE));
+			}
+			else
+			{
+				// failure
+				this.sendNotification(new Notification(AuthenticationManager.LOGIN, false, Phase.RESPONSE));
+			}
 		}
 		
 		public function logOut():void
@@ -85,8 +99,6 @@ package com.hydraframework.plugins.authentication.model
 			_principal.clear();
 			this.sendNotification(new Notification(AuthenticationManager.LOGOUT, null, Phase.RESPONSE));
 		}
-		
-
 	}
 	
 }

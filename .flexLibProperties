@@ -2,9 +2,10 @@
 <flexLibProperties version="1">
   <includeClasses>
     <classEntry path="com.hydraframework.plugins.authentication.controller.RestrictionRetrieveCommand"/>
+    <classEntry path="com.hydraframework.plugins.authentication.AuthenticationEvent"/>
     <classEntry path="com.hydraframework.plugins.authentication.model.IdentityProxy"/>
-    <classEntry path="com.hydraframework.plugins.authentication.controller.LogoutCommand"/>
     <classEntry path="com.hydraframework.plugins.authentication.data.delegates.MockIdentityDelegate"/>
+    <classEntry path="com.hydraframework.plugins.authentication.controller.LogoutCommand"/>
     <classEntry path="com.hydraframework.plugins.authentication.AuthenticationManager"/>
     <classEntry path="com.hydraframework.plugins.authentication.data.descriptors.Principal"/>
     <classEntry path="com.hydraframework.plugins.authentication.model.PrincipalProxy"/>
