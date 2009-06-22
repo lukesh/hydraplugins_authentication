@@ -1,21 +1,26 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <flexLibProperties version="1">
-  <includeClasses>
-    <classEntry path="com.hydraframework.plugins.authentication.controller.RestrictionRetrieveCommand"/>
-    <classEntry path="com.hydraframework.plugins.authentication.AuthenticationEvent"/>
-    <classEntry path="com.hydraframework.plugins.authentication.model.IdentityProxy"/>
-    <classEntry path="com.hydraframework.plugins.authentication.data.delegates.MockIdentityDelegate"/>
-    <classEntry path="com.hydraframework.plugins.authentication.controller.LogoutCommand"/>
-    <classEntry path="com.hydraframework.plugins.authentication.AuthenticationManager"/>
-    <classEntry path="com.hydraframework.plugins.authentication.data.descriptors.Principal"/>
-    <classEntry path="com.hydraframework.plugins.authentication.model.PrincipalProxy"/>
-    <classEntry path="com.hydraframework.plugins.authentication.controller.RoleRetrieveCommand"/>
-    <classEntry path="com.hydraframework.plugins.authentication.controller.IdentityRetrieveCommand"/>
-    <classEntry path="com.hydraframework.plugins.authentication.controller.LoginCommand"/>
-    <classEntry path="com.hydraframework.plugins.authentication.data.descriptors.LoginInformation"/>
-    <classEntry path="com.hydraframework.plugins.authentication.data.delegates.MockPrincipalDelegate"/>
-    <classEntry path="com.hydraframework.plugins.authentication.controller.RoleCheckCommand"/>
-  </includeClasses>
-  <includeResources/>
-  <namespaceManifests/>
+<includeClasses>
+<classEntry path="com.hydraframework.plugins.authentication.AuthenticationManager"/>
+<classEntry path="com.hydraframework.plugins.authentication.controller.IdentityRetrieveCommand"/>
+<classEntry path="com.hydraframework.plugins.authentication.controller.LoginCommand"/>
+<classEntry path="com.hydraframework.plugins.authentication.controller.LogoutCommand"/>
+<classEntry path="com.hydraframework.plugins.authentication.controller.RestrictionRetrieveCommand"/>
+<classEntry path="com.hydraframework.plugins.authentication.controller.RoleCheckCommand"/>
+<classEntry path="com.hydraframework.plugins.authentication.controller.RoleRetrieveCommand"/>
+<classEntry path="com.hydraframework.plugins.authentication.data.delegates.MockIdentityDelegate"/>
+<classEntry path="com.hydraframework.plugins.authentication.data.delegates.MockPrincipalDelegate"/>
+<classEntry path="com.hydraframework.plugins.authentication.data.descriptors.Identity"/>
+<classEntry path="com.hydraframework.plugins.authentication.data.descriptors.LoginInformation"/>
+<classEntry path="com.hydraframework.plugins.authentication.data.descriptors.Principal"/>
+<classEntry path="com.hydraframework.plugins.authentication.data.interfaces.IIdentity"/>
+<classEntry path="com.hydraframework.plugins.authentication.data.interfaces.IIdentityDelegate"/>
+<classEntry path="com.hydraframework.plugins.authentication.data.interfaces.ILoginInformation"/>
+<classEntry path="com.hydraframework.plugins.authentication.data.interfaces.IPrincipal"/>
+<classEntry path="com.hydraframework.plugins.authentication.data.interfaces.IPrincipalDelegate"/>
+<classEntry path="com.hydraframework.plugins.authentication.model.IdentityProxy"/>
+<classEntry path="com.hydraframework.plugins.authentication.model.PrincipalProxy"/>
+</includeClasses>
+<includeResources/>
+<namespaceManifests/>
 </flexLibProperties>

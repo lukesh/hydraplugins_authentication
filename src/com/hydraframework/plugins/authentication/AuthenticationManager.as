@@ -1,10 +1,12 @@
 package com.hydraframework.plugins.authentication
 {
 	import com.hydraframework.core.mvc.events.Notification;
+	import com.hydraframework.core.mvc.events.Phase;
 	import com.hydraframework.core.mvc.patterns.plugin.Plugin;
 	import com.hydraframework.plugins.authentication.controller.*;
 	import com.hydraframework.plugins.authentication.data.delegates.MockIdentityDelegate;
 	import com.hydraframework.plugins.authentication.data.delegates.MockPrincipalDelegate;
+	import com.hydraframework.plugins.authentication.data.descriptors.LoginInformation;
 	import com.hydraframework.plugins.authentication.data.interfaces.IIdentity;
 	import com.hydraframework.plugins.authentication.model.IdentityProxy;
 	import com.hydraframework.plugins.authentication.model.PrincipalProxy;
@@ -85,6 +87,10 @@ package com.hydraframework.plugins.authentication
 		public function get identity():IIdentity
 		{
 			return PrincipalProxy.getInstance().identity;
+		}
+		
+		public function login(loginInfo:LoginInformation):void {
+			this.sendNotification(new Notification(AuthenticationManager.LOGIN, loginInfo, Phase.REQUEST));
 		}
 		
 		public function isInRole(roleName:String):Boolean
