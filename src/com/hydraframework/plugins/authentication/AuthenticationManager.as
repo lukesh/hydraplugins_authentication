@@ -75,8 +75,7 @@ package com.hydraframework.plugins.authentication
 						break;
 				}
 			}
-			
-		}
+		} 
 		
 		public function get isLoggedOn():Boolean
 		{
