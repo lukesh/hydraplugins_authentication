@@ -25,6 +25,10 @@ package com.hydraframework.plugins.authentication
 		public static const LOGOUT:String = "plugins.authentication.logout";
 		public static const ROLE_CHECK:String = "plugins.authentication.roleCheck";
 		public static const IDENTITY_IMPERSONATE:String = "plugins.authentication.identityImpersonate";
+		
+		/**
+		 * Internal Notes
+		 */
 		public static const ROLE_RETRIEVE:String = "plugins.authentication.roleRetrieve";
 		public static const RESTRICTION_RETRIEVE:String = "plugins.authentication.restrictionRetrieve";
 		public static const IDENTITY_RETRIEVE:String = "plugins.authentication.identityRetrieve";
@@ -37,8 +41,8 @@ package com.hydraframework.plugins.authentication
 		public static const LOGIN_COMPLETE:String = "plugins.authentication.loginComplete";
 		public static const LOGOUT_COMPLETE:String = "plugins.authentication.logoutComplete";
 		public static const IMPERSONATION_COMPLETE:String = "plugins.authentication.impersonationComplete";
-		public static const CURRENT_USER_SET:String = "pluginsAuthenticationCurrentUserSet";
-		public static const IMPERSONATOR_SET:String = "pluginsAuthenticationImpersonatorSet";
+		public static const CURRENT_USER_SET:String = "plugins_Authentication_CurrentUserSet";
+		public static const IMPERSONATOR_SET:String = "plugins_Authentication_ImpersonatorSet";
 		
 		/**
 		 * @private
@@ -55,7 +59,7 @@ package com.hydraframework.plugins.authentication
 
 		private var _currentUser:IPrincipal;
 		
-		[Bindable(event="pluginsAuthenticationCurrentUserSet")]
+		[Bindable(event="plugins_Authentication_CurrentUserSet")]
 		public function get currentUser():IPrincipal
 		{
 			return _currentUser;
@@ -69,7 +73,7 @@ package com.hydraframework.plugins.authentication
 		
 		private var _impersonator:IPrincipal;
 
-		[Bindable(event="pluginsAuthenticationImpersonatorSet")]
+		[Bindable(event="plugins_Authentication_ImpersonatorSet")]
 		public function get impersonator():IPrincipal
 		{
 			return _impersonator;

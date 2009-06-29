@@ -3,6 +3,7 @@ package com.hydraframework.plugins.authentication.data.descriptors
 	import com.hydraframework.plugins.authentication.data.interfaces.IIdentity;
 	import com.hydraframework.plugins.authentication.data.interfaces.IPrincipal;
 	
+	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.IEventDispatcher;
 	import flash.utils.Dictionary;
@@ -23,9 +24,11 @@ package com.hydraframework.plugins.authentication.data.descriptors
 			return _identity;
 		}
 		
+		[Bindable(event="plugins_Authentication_identityChange")]
 		public function set identity(value:IIdentity):void
 		{
 			_identity = value;
+			this.dispatchEvent(new Event("plugins_Authentication_identityChange"));
 		}
 		
 		private var _roles:ArrayCollection;

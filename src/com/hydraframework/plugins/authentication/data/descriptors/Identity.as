@@ -28,16 +28,16 @@ package com.hydraframework.plugins.authentication.data.descriptors
 		
 		private var _displayName:String;
 		
-		[Bindable(event="displayNameChange")]
 		public function get displayName():String
 		{
 			return _displayName;
 		}
 		
+		[Bindable(event="plugins_Authentication_displayNameChange")]
 		public function set displayName(value:String):void
 		{
 			_displayName = value;
-			this.dispatchEvent(new Event("displayNameChange"));
+			this.dispatchEvent(new Event("plugins_Authentication_displayNameChange"));
 		}
 		
 		private var _attributes:Dictionary;
@@ -59,9 +59,11 @@ package com.hydraframework.plugins.authentication.data.descriptors
 			return _isAuthenticated;
 		}
 		
+		[Bindable(event="plugins_Authentication_isAuthenticatedChange")]
 		public function set isAuthenticated(value:Boolean):void
 		{
 			_isAuthenticated = value;
+			this.dispatchEvent(new Event("plugins_Authentication_isAuthenticatedChange"));
 		}
 
 		public function getAttribute(attributeName:String):Object
