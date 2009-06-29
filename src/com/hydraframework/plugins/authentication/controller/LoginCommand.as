@@ -1,6 +1,7 @@
 package com.hydraframework.plugins.authentication.controller
 {
 	import com.hydraframework.core.mvc.events.Notification;
+	import com.hydraframework.core.mvc.events.Phase;
 	import com.hydraframework.core.mvc.interfaces.IFacade;
 	import com.hydraframework.core.mvc.patterns.command.SimpleCommand;
 	import com.hydraframework.plugins.authentication.AuthenticationManager;
@@ -8,7 +9,6 @@ package com.hydraframework.plugins.authentication.controller
 	import com.hydraframework.plugins.authentication.data.interfaces.IIdentityDelegate;
 	import com.hydraframework.plugins.authentication.data.interfaces.ILoginInformation;
 	import com.hydraframework.plugins.authentication.data.interfaces.IIdentity;
-	import com.hydraframework.plugins.authentication.model.IdentityProxy;
 	
 	import mx.rpc.AsyncToken;
 	import mx.rpc.IResponder;

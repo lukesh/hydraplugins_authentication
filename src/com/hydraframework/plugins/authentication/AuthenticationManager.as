@@ -10,8 +10,6 @@ package com.hydraframework.plugins.authentication
 	import com.hydraframework.plugins.authentication.data.interfaces.IIdentity;
 	import com.hydraframework.plugins.authentication.data.interfaces.ILoginInformation;
 	import com.hydraframework.plugins.authentication.data.interfaces.IPrincipal;
-	import com.hydraframework.plugins.authentication.model.IdentityProxy;
-	import com.hydraframework.plugins.authentication.model.PrincipalProxy;
 	
 	import flash.events.Event;
 	
@@ -102,8 +100,7 @@ package com.hydraframework.plugins.authentication
 			/*
 			   Proxies
 			 */
-			this.facade.registerProxy(new IdentityProxy());
-			this.facade.registerProxy(new PrincipalProxy());
+			 
 			/*
 			   Commands
 			 */
