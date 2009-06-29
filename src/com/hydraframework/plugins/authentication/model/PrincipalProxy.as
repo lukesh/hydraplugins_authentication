@@ -64,26 +64,6 @@ package com.hydraframework.plugins.authentication.model
 			this.sendNotification(new Notification(AuthenticationManager.ROLE_CHECK, isInRole, Phase.RESPONSE));
 		}
 		
-		public function logIn(data:Object):void
-		{
-			if (data.result)
-			{
-				// success
-				var currentUser:IPrincipal = data.result as IPrincipal;
-				currentUser.identity.isAuthenticated = true;
-				this.sendNotification(new Notification(AuthenticationManager.LOGIN, currentUser, Phase.RESPONSE));
-			}
-			else
-			{
-				// failure
-				this.sendNotification(new Notification(AuthenticationManager.LOGIN, null, Phase.RESPONSE));
-			}
-		}
-		
-		public function logOut():void
-		{
-			this.sendNotification(new Notification(AuthenticationManager.LOGOUT, null, Phase.RESPONSE));
-		}
 	}
 	
 }

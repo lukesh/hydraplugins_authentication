@@ -61,7 +61,7 @@ package com.hydraframework.plugins.authentication.data.delegates
 
 			setTimeout(function():void
 				{
-					asyncToken.mx_internal::applyResult(new ResultEvent(ResultEvent.RESULT, false, true, mock_dataRestrictions, asyncToken, null));
+					asyncToken.mx_internal::applyResult(new ResultEvent(ResultEvent.RESULT, false, true, user, asyncToken, null));
 				}, 200);
 			return asyncToken;
 		}

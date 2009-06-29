@@ -5,6 +5,8 @@ package com.hydraframework.plugins.authentication
 	import com.hydraframework.core.mvc.patterns.plugin.Plugin;
 	import com.hydraframework.plugins.authentication.controller.*;
 	import com.hydraframework.plugins.authentication.data.delegates.*;
+	import com.hydraframework.plugins.authentication.data.descriptors.Principal;
+	import com.hydraframework.plugins.authentication.data.descriptors.Identity;
 	import com.hydraframework.plugins.authentication.data.interfaces.IIdentity;
 	import com.hydraframework.plugins.authentication.data.interfaces.ILoginInformation;
 	import com.hydraframework.plugins.authentication.data.interfaces.IPrincipal;
@@ -23,10 +25,11 @@ package com.hydraframework.plugins.authentication
 		public static const NAME:String = "AuthenticationManager";
 		public static const LOGIN:String = "plugins.authentication.login";
 		public static const LOGOUT:String = "plugins.authentication.logout";
+		public static const ROLE_CHECK:String = "plugins.authentication.roleCheck";
+		public static const IDENTITY_IMPERSONATE:String = "plugins.authentication.identityImpersonate";
 		public static const ROLE_RETRIEVE:String = "plugins.authentication.roleRetrieve";
 		public static const RESTRICTION_RETRIEVE:String = "plugins.authentication.restrictionRetrieve";
 		public static const IDENTITY_RETRIEVE:String = "plugins.authentication.identityRetrieve";
-		public static const ROLE_CHECK:String = "plugins.authentication.roleCheck";
 		
 		/**
 		 * Events 
@@ -35,6 +38,7 @@ package com.hydraframework.plugins.authentication
 		public static const ROLE_CHECK_COMPLETE:String = "plugins.authentication.roleCheckComplete";
 		public static const LOGIN_COMPLETE:String = "plugins.authentication.loginComplete";
 		public static const LOGOUT_COMPLETE:String = "plugins.authentication.logoutComplete";
+		public static const IMPERSONATION_COMPLETE:String = "plugins.authentication.impersonationComplete";
 		public static const CURRENT_USER_SET:String = "pluginsAuthenticationCurrentUserSet";
 		public static const IMPERSONATOR_SET:String = "pluginsAuthenticationImpersonatorSet";
 		
@@ -108,7 +112,7 @@ package com.hydraframework.plugins.authentication
 			this.facade.registerCommand(AuthenticationManager.ROLE_CHECK, RoleCheckCommand);
 			this.facade.registerCommand(AuthenticationManager.ROLE_RETRIEVE, RoleRetrieveCommand);
 			this.facade.registerCommand(AuthenticationManager.RESTRICTION_RETRIEVE, RestrictionRetrieveCommand);
-			this.facade.registerCommand(AuthenticationManager.IDENTITY_RETRIEVE, IdentityRetrieveCommand);
+			this.facade.registerCommand(AuthenticationManager.IDENTITY_IMPERSONATE, IdentityImpersonateCommand);
 		}
 
 		override public function handleNotification(notification:Notification):void {
@@ -116,6 +120,19 @@ package com.hydraframework.plugins.authentication
 			{
 				switch(notification.name)
 				{
+					case AuthenticationManager.IDENTITY_IMPERSONATE:
+						if (notification.body is IIdentity)
+						{
+							var newUser:Principal = new Principal();
+							newUser.identity = notification.body as IIdentity;
+							this.sendNotification(new Notification(AuthenticationManager.ROLE_RETRIEVE, newUser, Phase.REQUEST));
+						}
+						else
+						{
+							currentUser.clear();
+							this.dispatchEvent(new AuthenticationEvent(AuthenticationManager.LOGIN_COMPLETE, false, true));
+						}
+						break;
 					case AuthenticationManager.LOGIN:
 						if (notification.body is IIdentity)
 						{
@@ -142,13 +159,23 @@ package com.hydraframework.plugins.authentication
 							{
 								currentUser = roleUser;
 							}
-						this.sendNotification(new Notification(AuthenticationManager.RESTRICTION_RETRIEVE, currentUser, Phase.REQUEST));
-						
+							this.sendNotification(new Notification(AuthenticationManager.RESTRICTION_RETRIEVE, roleUser, Phase.REQUEST));
 						}
 						break;
 					case AuthenticationManager.RESTRICTION_RETRIEVE:
-						if 
-						this.dispatchEvent(new AuthenticationEvent(AuthenticationManager.LOGIN_COMPLETE, true, true));
+						if (notification.body is IPrincipal)
+						{
+							var roleUser:IPrincipal = notification.body as IPrincipal;
+							if (roleUser.identity.isAuthenticated)
+							{
+								currentUser = roleUser;
+								this.dispatchEvent(new AuthenticationEvent(AuthenticationManager.LOGIN_COMPLETE, true, true));
+							}
+							else
+							{
+								setImpersonation(roleUser);
+							}
+						}
 						break;
 					case AuthenticationManager.ROLE_CHECK:
 						this.dispatchEvent(new AuthenticationEvent(AuthenticationManager.ROLE_CHECK_COMPLETE, Boolean(notification.body), true));
@@ -183,15 +210,17 @@ package com.hydraframework.plugins.authentication
 		
 		public function beginImpersonation(newUser:String):void
 		{
-			
+			this.sendNotification(new Notification(AuthenticationManager.IDENTITY_RETRIEVE, newUser, Phase.REQUEST));
 		}
 		
-		public function beginImpersonation(newPrincipal:IPrincipal):void
+		private function setImpersonation(newPrincipal:IPrincipal):void
 		{
 			if (!AuthenticationManager.instance.currentUser.impersonated)
 			{
 				AuthenticationManager.instance.impersonator = AuthenticationManager.instance.currentUser;
 				AuthenticationManager.instance.currentUser = newPrincipal;
+				this.dispatchEvent(new AuthenticationEvent(AuthenticationManager.IMPERSONATION_COMPLETE, false, true));
+				
 			}
 		}
 		

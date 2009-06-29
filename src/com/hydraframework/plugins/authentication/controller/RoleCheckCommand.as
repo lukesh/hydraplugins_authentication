@@ -3,6 +3,7 @@ package com.hydraframework.plugins.authentication.controller
 	import com.hydraframework.core.mvc.events.Notification;
 	import com.hydraframework.core.mvc.interfaces.IFacade;
 	import com.hydraframework.core.mvc.patterns.command.SimpleCommand;
+	import com.hydraframework.plugins.authentication.AuthenticationManager;
 	import com.hydraframework.plugins.authentication.data.interfaces.*;
 	import com.hydraframework.plugins.authentication.model.*;
 	import mx.rpc.AsyncToken;
@@ -15,11 +16,6 @@ package com.hydraframework.plugins.authentication.controller
 			return this.facade.retrieveDelegate(IPrincipalDelegate) as IPrincipalDelegate;
 		}
 
-		public function get proxy():PrincipalProxy
-		{
-			return PrincipalProxy(this.facade.retrieveProxy(PrincipalProxy.NAME));
-		}
-
 		public function RoleCheckCommand(facade:IFacade)
 		{
 			super(facade);
@@ -27,10 +23,7 @@ package com.hydraframework.plugins.authentication.controller
 		
 		override public function execute(notification:Notification):void
 		{
-			if (notification.isRequest())
-			{
-				this.proxy.checkRole(String(notification.body));
-			}
+			//this.sendNotification(new Notification(AuthenticationManager, null, Phase.RESPONSE));
 		}
 		
 		public function result(data:Object):void {

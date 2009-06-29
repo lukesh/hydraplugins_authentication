@@ -3,8 +3,8 @@ package com.hydraframework.plugins.authentication.controller
 	import com.hydraframework.core.mvc.events.Notification;
 	import com.hydraframework.core.mvc.interfaces.IFacade;
 	import com.hydraframework.core.mvc.patterns.command.SimpleCommand;
+	import com.hydraframework.plugins.authentication.AuthenticationManager;
 	import com.hydraframework.plugins.authentication.data.interfaces.IIdentityDelegate;
-	import com.hydraframework.plugins.authentication.model.PrincipalProxy;
 	import mx.rpc.AsyncToken;
 	import mx.rpc.IResponder;
 
@@ -13,11 +13,6 @@ package com.hydraframework.plugins.authentication.controller
 		public function get delegate():IIdentityDelegate
 		{
 			return this.facade.retrieveDelegate(IIdentityDelegate) as IIdentityDelegate;
-		}
-
-		public function get proxy():PrincipalProxy
-		{
-			return PrincipalProxy(this.facade.retrieveProxy(PrincipalProxy.NAME));
 		}
 
 		public function LogoutCommand(facade:IFacade)
@@ -35,10 +30,7 @@ package com.hydraframework.plugins.authentication.controller
 		}
 		
 		public function result(data:Object):void {
-			if (Boolean(data.result))
-			{
-				this.proxy.logOut();
-			}
+			this.facade.sendNotification(new Notification(AuthenticationManager.LOGOUT, null, Phase.RESPONSE));
 		}
 		
 		public function fault(data:Object):void {

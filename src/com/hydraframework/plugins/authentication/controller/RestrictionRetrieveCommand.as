@@ -1,8 +1,10 @@
 package com.hydraframework.plugins.authentication.controller
 {
 	import com.hydraframework.core.mvc.events.Notification;
+	import com.hydraframework.core.mvc.events.Phase;
 	import com.hydraframework.core.mvc.interfaces.IFacade;
 	import com.hydraframework.core.mvc.patterns.command.SimpleCommand;
+	import com.hydraframework.plugins.authentication.AuthenticationManager;
 	import com.hydraframework.plugins.authentication.data.interfaces.*;
 	import com.hydraframework.plugins.authentication.model.*;
 	
@@ -18,11 +20,6 @@ package com.hydraframework.plugins.authentication.controller
 			return this.facade.retrieveDelegate(IPrincipalDelegate) as IPrincipalDelegate;
 		}
 
-		public function get proxy():PrincipalProxy
-		{
-			return PrincipalProxy(this.facade.retrieveProxy(PrincipalProxy.NAME));
-		}
-
 		public function RestrictionRetrieveCommand(facade:IFacade)
 		{
 			super(facade);
@@ -32,17 +29,14 @@ package com.hydraframework.plugins.authentication.controller
 		{
 			if (notification.isRequest())
 			{
-				var asyncToken:AsyncToken=this.delegate.retrieveDataRestrictions();
+				var asyncToken:AsyncToken=this.delegate.retrieveDataRestrictions(IPrincipal(notification.body));
 				asyncToken.addResponder(this);
 			}
 		}
 
 		public function result(data:Object):void
 		{
-			if (data.Result is Dictionary)
-			{
-				this.proxy.setDataRestrictions(Dictionary(data.result));
-			}
+			this.sendNotification(new Notification(AuthenticationManager.RESTRICTION_RETRIEVE, null, Phase.RESPONSE));
 		}
 		
 		public function fault(info:Object):void
