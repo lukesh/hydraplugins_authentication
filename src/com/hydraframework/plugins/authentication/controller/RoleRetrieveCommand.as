@@ -6,7 +6,6 @@ package com.hydraframework.plugins.authentication.controller
 	import com.hydraframework.core.mvc.patterns.command.SimpleCommand;
 	import com.hydraframework.plugins.authentication.AuthenticationManager;
 	import com.hydraframework.plugins.authentication.data.interfaces.*;
-	import com.hydraframework.plugins.authentication.model.*;
 	
 	import mx.collections.ArrayCollection;
 	import mx.rpc.AsyncToken;
@@ -35,7 +34,7 @@ package com.hydraframework.plugins.authentication.controller
 
 		public function result(data:Object):void
 		{
-			this.facade.sendNotification(new Notification(AuthenticationManager.ROLE_RETRIEVE, null, Phase.RESPONSE));
+			this.facade.sendNotification(new Notification(AuthenticationManager.ROLE_RETRIEVE, IPrincipal(data.result), Phase.RESPONSE));
 		}
 		
 		public function fault(info:Object):void

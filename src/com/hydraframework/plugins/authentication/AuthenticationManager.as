@@ -113,6 +113,9 @@ package com.hydraframework.plugins.authentication
 		}
 
 		override public function handleNotification(notification:Notification):void {
+			
+			trace("AuthenticationManager.handleNotification", notification.name, "::", notification.phase);
+			
 			if (notification.isResponse())
 			{
 				var roleUser:IPrincipal;

@@ -5,7 +5,6 @@ package com.hydraframework.plugins.authentication.controller
 	import com.hydraframework.core.mvc.patterns.command.SimpleCommand;
 	import com.hydraframework.plugins.authentication.AuthenticationManager;
 	import com.hydraframework.plugins.authentication.data.interfaces.*;
-	import com.hydraframework.plugins.authentication.model.*;
 	import mx.rpc.AsyncToken;
 	import mx.rpc.IResponder;
 
