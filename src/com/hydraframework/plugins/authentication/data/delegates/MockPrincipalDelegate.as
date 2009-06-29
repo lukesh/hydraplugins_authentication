@@ -1,14 +1,14 @@
 package com.hydraframework.plugins.authentication.data.delegates
 {
-	import com.hydraframework.plugins.authentication.data.interfaces.IPrincipalDelegate;
+	import com.hydraframework.plugins.authentication.data.interfaces.IPrincipal;
 	
 	import flash.utils.Dictionary;
 	import flash.utils.setTimeout;
-
-	import mx.rpc.AsyncToken;
+	
 	import mx.collections.ArrayCollection;
-	import mx.rpc.events.ResultEvent;
 	import mx.core.mx_internal;
+	import mx.rpc.AsyncToken;
+	import mx.rpc.events.ResultEvent;
 
 	public class MockPrincipalDelegate
 	{
@@ -38,20 +38,26 @@ package com.hydraframework.plugins.authentication.data.delegates
 			}
 		}
 
-		public function retrieveRoles():AsyncToken
+		public function retrieveRoles(user:IPrincipal):AsyncToken
 		{
 			var asyncToken:AsyncToken=new AsyncToken(null);
 
+			user.roles = mock_roleList;
+			user.rolesLoaded = true;
+
 			setTimeout(function():void
 				{
-					asyncToken.mx_internal::applyResult(new ResultEvent(ResultEvent.RESULT, false, true, mock_roleList, asyncToken, null));
+					asyncToken.mx_internal::applyResult(new ResultEvent(ResultEvent.RESULT, false, true, user, asyncToken, null));
 				}, 200);
 			return asyncToken;
 		}
 
-		public function retrieveDataRestrictions():AsyncToken
+		public function retrieveDataRestrictions(user:IPrincipal):AsyncToken
 		{
 			var asyncToken:AsyncToken=new AsyncToken(null);
+			
+			user.dataRestrictions = mock_dataRestrictions;
+			user.dataRestrictionsLoaded = true;
 
 			setTimeout(function():void
 				{

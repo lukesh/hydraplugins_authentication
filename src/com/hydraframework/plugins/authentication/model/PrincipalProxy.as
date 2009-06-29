@@ -17,19 +17,6 @@ package com.hydraframework.plugins.authentication.model
 	{
 		public static const NAME:String = "PrincipalProxy";
 		
-		/**
-		 * @private
-		 * Cached instance of the PrincipalProxy.
-		 */
-		private static const _instance:PrincipalProxy = new PrincipalProxy();
-
-		/**
-		 * Returns a cached instance of the PrincipalProxy.
-		 */
-		public static function getInstance():PrincipalProxy {
-			return _instance;
-		}
-
 		public function PrincipalProxy(data:Object=null)
 		{
 			super(NAME, data);
@@ -82,21 +69,19 @@ package com.hydraframework.plugins.authentication.model
 			if (data.result)
 			{
 				// success
-				_principal.clear();
-				_principal.identity = identity;
-				_principal.identity.isAuthenticated = true;
-				this.sendNotification(new Notification(AuthenticationManager.LOGIN, true, Phase.RESPONSE));
+				var currentUser:IPrincipal = data.result as IPrincipal;
+				currentUser.identity.isAuthenticated = true;
+				this.sendNotification(new Notification(AuthenticationManager.LOGIN, currentUser, Phase.RESPONSE));
 			}
 			else
 			{
 				// failure
-				this.sendNotification(new Notification(AuthenticationManager.LOGIN, false, Phase.RESPONSE));
+				this.sendNotification(new Notification(AuthenticationManager.LOGIN, null, Phase.RESPONSE));
 			}
 		}
 		
 		public function logOut():void
 		{
-			_principal.clear();
 			this.sendNotification(new Notification(AuthenticationManager.LOGOUT, null, Phase.RESPONSE));
 		}
 	}

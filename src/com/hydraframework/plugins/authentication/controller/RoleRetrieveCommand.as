@@ -5,9 +5,10 @@ package com.hydraframework.plugins.authentication.controller
 	import com.hydraframework.core.mvc.patterns.command.SimpleCommand;
 	import com.hydraframework.plugins.authentication.data.interfaces.*;
 	import com.hydraframework.plugins.authentication.model.*;
+	
+	import mx.collections.ArrayCollection;
 	import mx.rpc.AsyncToken;
 	import mx.rpc.IResponder;
-	import mx.collections.ArrayCollection;
 
 	public class RoleRetrieveCommand extends SimpleCommand implements IResponder
 	{
@@ -30,7 +31,7 @@ package com.hydraframework.plugins.authentication.controller
 		{
 			if (notification.isRequest())
 			{
-				var asyncToken:AsyncToken=this.delegate.retrieveRoles();
+				var asyncToken:AsyncToken=this.delegate.retrieveRoles(notification.body as IPrincipal);
 				asyncToken.addResponder(this);
 			}
 		}

@@ -5,14 +5,14 @@ package com.hydraframework.plugins.authentication.data.interfaces
 	public interface IPrincipalDelegate
 	{
 		/**
-		 * @return message with null payload if the role retrieval failed and an ArrayCollection of roles payload if it succeeded
+		 * @return message of supplied user with no user roles if the role retrieval failed and user roles populated if it succeeded
 		 */
-		function retrieveRoles():AsyncToken;
+		function retrieveRoles(user:IPrincipal):AsyncToken;
 		
 		/**
-		 * @return message with null payload if the data restriction retrieval failed and a Dictionary of data restrictions and values payload if it succeeded
+		 * @return message of supplied user with no data restrictions if the data restriction retrieval failed and data restrictions populated if it succeeded
 		 */
-		function retrieveDataRestrictions():AsyncToken;
+		function retrieveDataRestrictions(user:IPrincipal):AsyncToken;
 		
 	}
 }

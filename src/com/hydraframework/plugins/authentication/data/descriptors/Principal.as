@@ -52,6 +52,19 @@ package com.hydraframework.plugins.authentication.data.descriptors
 			_dataRestrictions = value;
 		}
 		
+		private var _impersonated:Boolean;
+		
+		public function get impersonated():Boolean
+		{
+			return _impersonated;
+		}
+		
+		public function set impersonated(value:Boolean):void
+		{
+			_impersonated = value;
+		}
+
+		
 		private var _rolesLoaded:Boolean = false;
 		
 		public function get rolesLoaded():Boolean

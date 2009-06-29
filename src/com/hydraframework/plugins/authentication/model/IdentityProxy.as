@@ -12,32 +12,31 @@ package com.hydraframework.plugins.authentication.model
 	{
 		public static const NAME:String = "IdentityProxy";
 
-		/**
-		 * @private
-		 * Cached instance of the IdentityProxy.
-		 */
-		private static const _instance:IdentityProxy = new IdentityProxy();
-
-		private var _identity:IIdentity;
-
-		/**
-		 * Returns a cached instance of the IdentityProxy.
-		 */
-		public static function getInstance():IdentityProxy {
-			return _instance;
-		}
-
 		public function IdentityProxy()
 		{
 			super(NAME);
-			_identity = PrincipalProxy.getInstance().identity;
 		}
 		
-		public function isLoggedOn():Boolean
+		public function logIn(data:Object):void
 		{
-			return _identity.isAuthenticated;
+			if (data.result)
+			{
+				// success
+				var currentUser:IIdentity = data.result as IIdentity;
+				currentUser.isAuthenticated = true;
+				this.sendNotification(new Notification(AuthenticationManager.LOGIN, currentUser, Phase.RESPONSE));
+			}
+			else
+			{
+				// failure
+				this.sendNotification(new Notification(AuthenticationManager.LOGIN, null, Phase.RESPONSE));
+			}
 		}
 		
+		public function logOut():void
+		{
+			this.sendNotification(new Notification(AuthenticationManager.LOGOUT, null, Phase.RESPONSE));
+		}
 		
 	}
 }
