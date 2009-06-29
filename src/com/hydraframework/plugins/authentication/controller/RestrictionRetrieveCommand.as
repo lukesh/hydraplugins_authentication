@@ -36,7 +36,7 @@ package com.hydraframework.plugins.authentication.controller
 
 		public function result(data:Object):void
 		{
-			this.sendNotification(new Notification(AuthenticationManager.RESTRICTION_RETRIEVE, null, Phase.RESPONSE));
+			this.facade.sendNotification(new Notification(AuthenticationManager.RESTRICTION_RETRIEVE, null, Phase.RESPONSE));
 		}
 		
 		public function fault(info:Object):void

@@ -1,6 +1,7 @@
 package com.hydraframework.plugins.authentication.data.delegates
 {
 	import com.hydraframework.plugins.authentication.data.interfaces.IPrincipal;
+	import com.hydraframework.plugins.authentication.data.interfaces.IPrincipalDelegate;
 	
 	import flash.utils.Dictionary;
 	import flash.utils.setTimeout;
@@ -10,7 +11,7 @@ package com.hydraframework.plugins.authentication.data.delegates
 	import mx.rpc.AsyncToken;
 	import mx.rpc.events.ResultEvent;
 
-	public class MockPrincipalDelegate
+	public class MockPrincipalDelegate implements IPrincipalDelegate
 	{
 		public static var mock_roleList:ArrayCollection;
 		public static var mock_dataRestrictions:Dictionary;

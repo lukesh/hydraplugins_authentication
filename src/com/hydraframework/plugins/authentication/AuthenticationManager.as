@@ -115,6 +115,7 @@ package com.hydraframework.plugins.authentication
 		override public function handleNotification(notification:Notification):void {
 			if (notification.isResponse())
 			{
+				var roleUser:IPrincipal;
 				switch(notification.name)
 				{
 					case AuthenticationManager.IDENTITY_IMPERSONATE:
@@ -151,7 +152,7 @@ package com.hydraframework.plugins.authentication
 					case AuthenticationManager.ROLE_RETRIEVE:
 						if (notification.body is IPrincipal)
 						{
-							var roleUser:IPrincipal = notification.body as IPrincipal;
+							roleUser = notification.body as IPrincipal;
 							if (roleUser.identity.isAuthenticated)
 							{
 								currentUser = roleUser;
@@ -162,7 +163,7 @@ package com.hydraframework.plugins.authentication
 					case AuthenticationManager.RESTRICTION_RETRIEVE:
 						if (notification.body is IPrincipal)
 						{
-							var roleUser:IPrincipal = notification.body as IPrincipal;
+							roleUser = notification.body as IPrincipal;
 							if (roleUser.identity.isAuthenticated)
 							{
 								currentUser = roleUser;
