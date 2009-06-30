@@ -35,6 +35,5 @@ package com.hydraframework.plugins.authentication.data.descriptors
 		{
 			_password = value;
 		}
-		
 	}
 }

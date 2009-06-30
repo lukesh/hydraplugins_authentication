@@ -14,6 +14,7 @@ package com.hydraframework.plugins.authentication.data.interfaces
 		function set rolesLoaded(value:Boolean):void;
 		function get dataRestrictionsLoaded():Boolean;
 		function set dataRestrictionsLoaded(value:Boolean):void;
+		[Bindable(event="plugins_Authentication_identityChange")]
 		function get identity():IIdentity;
 		function set identity(value:IIdentity):void;
 		function get impersonated():Boolean;

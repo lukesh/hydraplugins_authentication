@@ -13,6 +13,5 @@ package com.hydraframework.plugins.authentication.data.interfaces
 		 * @return message of supplied user with no data restrictions if the data restriction retrieval failed and data restrictions populated if it succeeded
 		 */
 		function retrieveDataRestrictions(user:IPrincipal):AsyncToken;
-		
 	}
 }

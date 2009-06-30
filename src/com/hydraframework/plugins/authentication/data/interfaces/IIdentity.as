@@ -9,10 +9,12 @@ package com.hydraframework.plugins.authentication.data.interfaces
 	{
 		function get userId():String;
 		function set userId(value:String):void;
+		[Bindable(event="plugins_Authentication_displayNameChange")]
 		function get displayName():String;
 		function set displayName(value:String):void;
 		function get attributes():Dictionary;
 		function set attributes(value:Dictionary):void;
+		[Bindable(event="plugins_Authentication_isAuthenticatedChange")]
 		function get isAuthenticated():Boolean;
 		function set isAuthenticated(value:Boolean):void;
 				

@@ -5,37 +5,38 @@ package com.hydraframework.plugins.authentication
 	import com.hydraframework.core.mvc.patterns.plugin.Plugin;
 	import com.hydraframework.plugins.authentication.controller.*;
 	import com.hydraframework.plugins.authentication.data.delegates.*;
-	import com.hydraframework.plugins.authentication.data.descriptors.Principal;
 	import com.hydraframework.plugins.authentication.data.descriptors.Identity;
+	import com.hydraframework.plugins.authentication.data.descriptors.Principal;
 	import com.hydraframework.plugins.authentication.data.interfaces.IIdentity;
 	import com.hydraframework.plugins.authentication.data.interfaces.ILoginInformation;
 	import com.hydraframework.plugins.authentication.data.interfaces.IPrincipal;
-	
+
 	import flash.events.Event;
-	
+
 	import mx.collections.ArrayCollection;
 
+	[Bindable]
 	public class AuthenticationManager extends Plugin
 	{
 		/**
 		 * Notes
-		 */		
+		 */
 		public static const NAME:String = "AuthenticationManager";
 		public static const LOGIN:String = "plugins.authentication.login";
 		public static const LOGOUT:String = "plugins.authentication.logout";
 		public static const ROLE_CHECK:String = "plugins.authentication.roleCheck";
 		public static const IDENTITY_IMPERSONATE:String = "plugins.authentication.identityImpersonate";
-		
+
 		/**
 		 * Internal Notes
 		 */
 		public static const ROLE_RETRIEVE:String = "plugins.authentication.roleRetrieve";
 		public static const RESTRICTION_RETRIEVE:String = "plugins.authentication.restrictionRetrieve";
 		public static const IDENTITY_RETRIEVE:String = "plugins.authentication.identityRetrieve";
-		
+
 		/**
-		 * Events 
-		 * 
+		 * Events
+		 *
 		 */
 		public static const ROLE_CHECK_COMPLETE:String = "plugins.authentication.roleCheckComplete";
 		public static const LOGIN_COMPLETE:String = "plugins.authentication.loginComplete";
@@ -43,7 +44,7 @@ package com.hydraframework.plugins.authentication
 		public static const IMPERSONATION_COMPLETE:String = "plugins.authentication.impersonationComplete";
 		public static const CURRENT_USER_SET:String = "plugins_Authentication_CurrentUserSet";
 		public static const IMPERSONATOR_SET:String = "plugins_Authentication_ImpersonatorSet";
-		
+
 		/**
 		 * @private
 		 * Cached instance of the AuthenticationManager.
@@ -53,24 +54,29 @@ package com.hydraframework.plugins.authentication
 		/**
 		 * Returns a cached instance of the AuthenticationManager.
 		 */
-		public static function get instance():AuthenticationManager {
+		public static function get instance():AuthenticationManager
+		{
 			return _instance;
 		}
 
 		private var _currentUser:IPrincipal;
-		
+
 		[Bindable(event="plugins_Authentication_CurrentUserSet")]
 		public function get currentUser():IPrincipal
 		{
 			return _currentUser;
 		}
-		
+
 		public function set currentUser(value:IPrincipal):void
 		{
 			_currentUser = value;
+			// Dispatching event for contingent property "isLoggedOn"
+			this.dispatchEvent(new Event("plugins_Authentication_isAuthenticatedChange"));
+			// Dispatching event for contingent property "identity"
+			this.dispatchEvent(new Event("plugins_Authentication_identityChange"));
 			this.dispatchEvent(new Event(CURRENT_USER_SET));
 		}
-		
+
 		private var _impersonator:IPrincipal;
 
 		[Bindable(event="plugins_Authentication_ImpersonatorSet")]
@@ -85,16 +91,47 @@ package com.hydraframework.plugins.authentication
 			this.dispatchEvent(new Event(IMPERSONATOR_SET));
 		}
 
+		/*
+		   --------------------------------------------------------------------
+
+		   The following properties are bindable, however depend on binding
+		   events in a seperate binding chain. Therefore, the local property
+		   that participates in that chain must be responsible for dispatching
+		   this change event along with its own.
+
+		 */
+
+		[Bindable(event="plugins_Authentication_isAuthenticatedChange")]
+		public function get isLoggedOn():Boolean
+		{
+			// AuthenticationManager.instance.currentUser must dispatch this
+			// change event.
+			return AuthenticationManager.instance.currentUser.identity.isAuthenticated;
+		}
+
+		[Bindable(event="plugins_Authentication_identityChange")]
+		public function get identity():IIdentity
+		{
+			// AuthenticationManager.instance.currentUser must dispatch this
+			// change event.
+			return AuthenticationManager.instance.currentUser.identity;
+		}
+
+		/*
+		   --------------------------------------------------------------------
+		 */
+
 		public function AuthenticationManager()
 		{
 			super(NAME);
 			_currentUser = new Principal();
 			_currentUser.identity = new Identity();
-			_currentUser.identity.isAuthenticated = false;	
+			_currentUser.identity.isAuthenticated = false;
 			_impersonator = null;
 		}
 
-		override public function preinitialize():void {
+		override public function preinitialize():void
+		{
 			super.preinitialize();
 			/*
 			   Delegates
@@ -104,7 +141,7 @@ package com.hydraframework.plugins.authentication
 			/*
 			   Proxies
 			 */
-			 
+
 			/*
 			   Commands
 			 */
@@ -116,14 +153,15 @@ package com.hydraframework.plugins.authentication
 			this.facade.registerCommand(AuthenticationManager.IDENTITY_IMPERSONATE, IdentityImpersonateCommand);
 		}
 
-		override public function handleNotification(notification:Notification):void {
-			
+		override public function handleNotification(notification:Notification):void
+		{
+
 			trace("AuthenticationManager.handleNotification", notification.name, "::", notification.phase);
-			
+
 			if (notification.isResponse())
 			{
 				var roleUser:IPrincipal;
-				switch(notification.name)
+				switch (notification.name)
 				{
 					case AuthenticationManager.IDENTITY_IMPERSONATE:
 						if (notification.body is IIdentity)
@@ -143,7 +181,7 @@ package com.hydraframework.plugins.authentication
 						{
 							currentUser.identity = notification.body as IIdentity;
 							this.sendNotification(new Notification(AuthenticationManager.ROLE_RETRIEVE, currentUser, Phase.REQUEST));
-							//this.dispatchEvent(new AuthenticationEvent(AuthenticationManager.LOGIN_COMPLETE, true, true));
+								//this.dispatchEvent(new AuthenticationEvent(AuthenticationManager.LOGIN_COMPLETE, true, true));
 						}
 						else
 						{
@@ -187,38 +225,28 @@ package com.hydraframework.plugins.authentication
 						break;
 				}
 			}
-		} 
-		
-		[Bindable(event="plugins_Authentication_isAuthenticatedChange")]
-		public function get isLoggedOn():Boolean
-		{
-			return AuthenticationManager.instance.currentUser.identity.isAuthenticated;
 		}
-		
-		public function get identity():IIdentity
+
+		public function login(loginInfo:ILoginInformation):void
 		{
-			return AuthenticationManager.instance.currentUser.identity;
-		}
-		
-		public function login(loginInfo:ILoginInformation):void {
 			this.sendNotification(new Notification(AuthenticationManager.LOGIN, loginInfo, Phase.REQUEST));
 		}
-		
+
 		public function isInRole(roleName:String):Boolean
 		{
 			return AuthenticationManager.instance.currentUser.isInRole(roleName);
 		}
-		
+
 		public function hasDataRestriction(dataRestrictionName:String):ArrayCollection
 		{
 			return AuthenticationManager.instance.currentUser.getDataRestrictionValues(dataRestrictionName);
 		}
-		
+
 		public function beginImpersonation(newUser:String):void
 		{
 			this.sendNotification(new Notification(AuthenticationManager.IDENTITY_RETRIEVE, newUser, Phase.REQUEST));
 		}
-		
+
 		private function setImpersonation(newPrincipal:IPrincipal):void
 		{
 			if (!AuthenticationManager.instance.currentUser.impersonated)
@@ -226,10 +254,10 @@ package com.hydraframework.plugins.authentication
 				AuthenticationManager.instance.impersonator = AuthenticationManager.instance.currentUser;
 				AuthenticationManager.instance.currentUser = newPrincipal;
 				this.dispatchEvent(new AuthenticationEvent(AuthenticationManager.IMPERSONATION_COMPLETE, false, true));
-				
+
 			}
 		}
-		
+
 		public function endImpersonation():void
 		{
 			if (!AuthenticationManager.instance.impersonator)
