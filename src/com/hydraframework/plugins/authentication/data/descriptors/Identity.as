@@ -28,12 +28,12 @@ package com.hydraframework.plugins.authentication.data.descriptors
 		
 		private var _displayName:String;
 		
+		[Bindable(event="plugins_Authentication_displayNameChange")]
 		public function get displayName():String
 		{
 			return _displayName;
 		}
 		
-		[Bindable(event="plugins_Authentication_displayNameChange")]
 		public function set displayName(value:String):void
 		{
 			_displayName = value;
@@ -54,12 +54,12 @@ package com.hydraframework.plugins.authentication.data.descriptors
 		
 		private var _isAuthenticated:Boolean = false;
 		
+		[Bindable(event="plugins_Authentication_isAuthenticatedChange")]
 		public function get isAuthenticated():Boolean
 		{
 			return _isAuthenticated;
 		}
 		
-		[Bindable(event="plugins_Authentication_isAuthenticatedChange")]
 		public function set isAuthenticated(value:Boolean):void
 		{
 			_isAuthenticated = value;
@@ -76,6 +76,7 @@ package com.hydraframework.plugins.authentication.data.descriptors
 			_attributes = null;
 			_displayName = null;
 			_userId = null;
+			_isAuthenticated = false;
 		}
 	}
 }

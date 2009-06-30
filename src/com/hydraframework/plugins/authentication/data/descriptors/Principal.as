@@ -19,12 +19,12 @@ package com.hydraframework.plugins.authentication.data.descriptors
 		
 		private var _identity:IIdentity;
 		
+		[Bindable(event="plugins_Authentication_identityChange")]
 		public function get identity():IIdentity
 		{
 			return _identity;
 		}
 		
-		[Bindable(event="plugins_Authentication_identityChange")]
 		public function set identity(value:IIdentity):void
 		{
 			_identity = value;

@@ -189,6 +189,7 @@ package com.hydraframework.plugins.authentication
 			}
 		} 
 		
+		[Bindable(event="plugins_Authentication_isAuthenticatedChange")]
 		public function get isLoggedOn():Boolean
 		{
 			return AuthenticationManager.instance.currentUser.identity.isAuthenticated;
