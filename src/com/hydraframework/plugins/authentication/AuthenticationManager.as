@@ -10,9 +10,9 @@ package com.hydraframework.plugins.authentication
 	import com.hydraframework.plugins.authentication.data.interfaces.IIdentity;
 	import com.hydraframework.plugins.authentication.data.interfaces.ILoginInformation;
 	import com.hydraframework.plugins.authentication.data.interfaces.IPrincipal;
-
+	
 	import flash.events.Event;
-
+	
 	import mx.collections.ArrayCollection;
 
 	[Bindable]
@@ -190,7 +190,10 @@ package com.hydraframework.plugins.authentication
 						}
 						break;
 					case AuthenticationManager.LOGOUT:
-						currentUser.clear();
+						var blankUser:IPrincipal = new Principal();
+						blankUser.identity = new Identity();
+						currentUser = blankUser;
+						//currentUser.clear();
 						impersonator = null;
 						this.dispatchEvent(new AuthenticationEvent(AuthenticationManager.LOGOUT_COMPLETE, false, true));
 						break;

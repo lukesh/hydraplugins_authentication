@@ -76,7 +76,7 @@ package com.hydraframework.plugins.authentication.data.descriptors
 			_attributes = null;
 			_displayName = null;
 			_userId = null;
-			_isAuthenticated = false;
+			isAuthenticated = false;
 		}
 	}
 }

@@ -113,7 +113,9 @@ package com.hydraframework.plugins.authentication.data.descriptors
 			_dataRestrictions = null;
 			_rolesLoaded = false;
 			_dataRestrictionsLoaded = false;
-			_identity.clear();
+			//identity.clear();
+			identity = new Identity();
+			identity.isAuthenticated = false;
 		}
 	}
 }
