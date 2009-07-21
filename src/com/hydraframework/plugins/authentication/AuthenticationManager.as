@@ -18,10 +18,11 @@ package com.hydraframework.plugins.authentication
 	[Bindable]
 	public class AuthenticationManager extends Plugin
 	{
+		public static const NAME:String = "AuthenticationManager";
+
 		/**
 		 * Notes
 		 */
-		public static const NAME:String = "AuthenticationManager";
 		public static const LOGIN:String = "plugins.authentication.login";
 		public static const LOGOUT:String = "plugins.authentication.logout";
 		public static const ROLE_CHECK:String = "plugins.authentication.roleCheck";
@@ -42,6 +43,10 @@ package com.hydraframework.plugins.authentication
 		public static const LOGIN_COMPLETE:String = "plugins.authentication.loginComplete";
 		public static const LOGOUT_COMPLETE:String = "plugins.authentication.logoutComplete";
 		public static const IMPERSONATION_COMPLETE:String = "plugins.authentication.impersonationComplete";
+
+		/**
+		 * CURRENT_USER_SET is the event thrown by changes to the currentUser property for databinding purposes
+		 */
 		public static const CURRENT_USER_SET:String = "plugins_Authentication_CurrentUserSet";
 		public static const IMPERSONATOR_SET:String = "plugins_Authentication_ImpersonatorSet";
 
