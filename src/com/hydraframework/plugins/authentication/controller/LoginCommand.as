@@ -1,5 +1,8 @@
-package com.hydraframework.plugins.authentication.controller
-{
+/*
+   HydraFramework - Copyright (c) 2009 andCulture, Inc. Some rights reserved.
+   Your reuse is governed by the Creative Commons Attribution 3.0 United States License
+ */
+package com.hydraframework.plugins.authentication.controller {
 	import com.hydraframework.core.mvc.events.Notification;
 	import com.hydraframework.core.mvc.events.Phase;
 	import com.hydraframework.core.mvc.interfaces.IFacade;
@@ -9,40 +12,36 @@ package com.hydraframework.plugins.authentication.controller
 	import com.hydraframework.plugins.authentication.data.interfaces.IIdentityDelegate;
 	import com.hydraframework.plugins.authentication.data.interfaces.ILoginInformation;
 	import com.hydraframework.plugins.authentication.data.interfaces.IIdentity;
-	
+
 	import mx.rpc.AsyncToken;
 	import mx.rpc.IResponder;
 
-	public class LoginCommand extends SimpleCommand implements IResponder
-	{
-		public function get delegate():IIdentityDelegate
-		{
-			return this.facade.retrieveDelegate(IIdentityDelegate) as IIdentityDelegate;
+	public class LoginCommand extends SimpleCommand implements IResponder {
+		public function get delegate():IIdentityDelegate {
+			var d:IIdentityDelegate = this.facade.retrieveDelegate(IIdentityDelegate) as IIdentityDelegate;
+			d.responder = this;
+			return d;
 		}
 
-		public function LoginCommand(facade:IFacade)
-		{
+		public function LoginCommand(facade:IFacade) {
 			super(facade);
 		}
 
-		override public function execute(notification:Notification):void
-		{
-			if (notification.isRequest())
-			{
-				var loginInfo:ILoginInformation = notification.body as ILoginInformation;
-				
-				var asyncToken:AsyncToken=this.delegate.login(loginInfo);
-				asyncToken.addResponder(this);
+		override public function execute(notification:Notification):void {
+			if (notification.isRequest()) {
+				var loginInfo:ILoginInformation=notification.body as ILoginInformation;
+
+				this.delegate.login(loginInfo);
 			}
 		}
-		
+
 		public function result(data:Object):void {
-			var currentUser:IIdentity = data.result as IIdentity;
-			currentUser.isAuthenticated = true;
+			var currentUser:IIdentity=data.result as IIdentity;
+			currentUser.isAuthenticated=true;
 
 			this.facade.sendNotification(new Notification(AuthenticationManager.LOGIN, currentUser, Phase.RESPONSE));
 		}
-		
+
 		public function fault(data:Object):void {
 		}
 	}
