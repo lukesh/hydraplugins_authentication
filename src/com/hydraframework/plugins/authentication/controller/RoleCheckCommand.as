@@ -1,5 +1,8 @@
-package com.hydraframework.plugins.authentication.controller
-{
+/*
+   HydraFramework - Copyright (c) 2009 andCulture, Inc. Some rights reserved.
+   Your reuse is governed by the Creative Commons Attribution 3.0 United States License
+ */
+package com.hydraframework.plugins.authentication.controller {
 	import com.hydraframework.core.mvc.events.Notification;
 	import com.hydraframework.core.mvc.interfaces.IFacade;
 	import com.hydraframework.core.mvc.patterns.command.SimpleCommand;
@@ -8,28 +11,26 @@ package com.hydraframework.plugins.authentication.controller
 	import mx.rpc.AsyncToken;
 	import mx.rpc.IResponder;
 
-	public class RoleCheckCommand extends SimpleCommand implements IResponder
-	{
-		public function get delegate():IPrincipalDelegate
-		{
-			return this.facade.retrieveDelegate(IPrincipalDelegate) as IPrincipalDelegate;
+	public class RoleCheckCommand extends SimpleCommand implements IResponder {
+		public function get delegate():IPrincipalDelegate {
+			var d:IPrincipalDelegate = this.facade.retrieveDelegate(IPrincipalDelegate) as IPrincipalDelegate;
+			d.responder = this;
+			return d;
 		}
 
-		public function RoleCheckCommand(facade:IFacade)
-		{
+		public function RoleCheckCommand(facade:IFacade) {
 			super(facade);
 		}
-		
-		override public function execute(notification:Notification):void
-		{
+
+		override public function execute(notification:Notification):void {
 			//this.sendNotification(new Notification(AuthenticationManager, null, Phase.RESPONSE));
 		}
-		
+
 		public function result(data:Object):void {
 		}
-		
+
 		public function fault(data:Object):void {
 		}
-	
+
 	}
 }

@@ -1,12 +1,14 @@
-package com.hydraframework.plugins.authentication.data.interfaces
-{
+/*
+   HydraFramework - Copyright (c) 2009 andCulture, Inc. Some rights reserved.
+   Your reuse is governed by the Creative Commons Attribution 3.0 United States License
+ */
+package com.hydraframework.plugins.authentication.data.interfaces {
 	import flash.utils.Dictionary;
-	
+
 	import mx.collections.ArrayCollection;
-	
+
 	[Bindable]
-	public interface IIdentity
-	{
+	public interface IIdentity {
 		function get userId():String;
 		function set userId(value:String):void;
 		[Bindable(event="plugins_Authentication_displayNameChange")]
@@ -17,9 +19,9 @@ package com.hydraframework.plugins.authentication.data.interfaces
 		[Bindable(event="plugins_Authentication_isAuthenticatedChange")]
 		function get isAuthenticated():Boolean;
 		function set isAuthenticated(value:Boolean):void;
-				
+
 		/* any other core attributes that would be common across hydra apps? */
-		
+
 		function getAttribute(attributeName:String):Object;
 		function clear():void;
 	}

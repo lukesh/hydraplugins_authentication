@@ -1,11 +1,13 @@
-package com.hydraframework.plugins.authentication.data.interfaces
-{
+/*
+   HydraFramework - Copyright (c) 2009 andCulture, Inc. Some rights reserved.
+   Your reuse is governed by the Creative Commons Attribution 3.0 United States License
+ */
+package com.hydraframework.plugins.authentication.data.interfaces {
 	import flash.utils.Dictionary;
-	
+
 	import mx.collections.ArrayCollection;
 
-	public interface IPrincipal
-	{
+	public interface IPrincipal {
 		function get roles():ArrayCollection;
 		function set roles(value:ArrayCollection):void;
 		function get dataRestrictions():Dictionary;
