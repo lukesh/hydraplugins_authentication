@@ -10,8 +10,8 @@ package com.hydraframework.plugins.authentication.controller {
 	import com.hydraframework.plugins.authentication.AuthenticationManager;
 	import com.hydraframework.plugins.authentication.data.interfaces.*;
 	
-	import mx.rpc.AsyncToken;
 	import mx.rpc.IResponder;
+	import mx.rpc.events.ResultEvent;
 
 	public class IdentityImpersonateCommand extends SimpleCommand implements IResponder {
 		public function get delegate():IIdentityDelegate {
