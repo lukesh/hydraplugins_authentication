@@ -9,10 +9,9 @@ package com.hydraframework.plugins.authentication.controller {
 	import com.hydraframework.core.mvc.patterns.command.SimpleCommand;
 	import com.hydraframework.plugins.authentication.AuthenticationManager;
 	import com.hydraframework.plugins.authentication.data.interfaces.*;
-
-	import mx.collections.ArrayCollection;
-	import mx.rpc.AsyncToken;
+	
 	import mx.rpc.IResponder;
+	import mx.rpc.events.ResultEvent;
 
 	public class RoleRetrieveCommand extends SimpleCommand implements IResponder {
 		public function get delegate():IPrincipalDelegate {
@@ -32,7 +31,11 @@ package com.hydraframework.plugins.authentication.controller {
 		}
 
 		public function result(data:Object):void {
-			this.facade.sendNotification(new Notification(AuthenticationManager.ROLE_RETRIEVE, IPrincipal(data.result), Phase.RESPONSE));
+			if (data is ResultEvent) {
+				this.facade.sendNotification(new Notification(AuthenticationManager.ROLE_RETRIEVE, IPrincipal(data.result), Phase.RESPONSE));
+			} else if (data is IPrincipal) {
+				this.facade.sendNotification(new Notification(AuthenticationManager.ROLE_RETRIEVE, IPrincipal(data), Phase.RESPONSE));
+			}
 		}
 
 		public function fault(info:Object):void {
