@@ -175,7 +175,7 @@ package com.hydraframework.plugins.authentication {
 				switch (notification.name) {
 					case AuthenticationManager.IDENTITY_IMPERSONATE:
 						if (notification.body is IIdentity) {
-							var newUser:Principal=new Principal();
+							var newUser:IPrincipal = principalDelegate.recordFactory();
 							newUser.identity=notification.body as IIdentity;
 							this.sendNotification(new Notification(AuthenticationManager.ROLE_RETRIEVE, newUser, Phase.REQUEST));
 						} else {
@@ -194,10 +194,9 @@ package com.hydraframework.plugins.authentication {
 						}
 						break;
 					case AuthenticationManager.LOGOUT:
-						var blankUser:IPrincipal=new Principal();
-						blankUser.identity=new Identity();
+						var blankUser:IPrincipal = principalDelegate.recordFactory();
+						blankUser.identity = identityDelegate.recordFactory();
 						currentUser=blankUser;
-						//currentUser.clear();
 						impersonator=null;
 						this.dispatchEvent(new AuthenticationEvent(AuthenticationManager.LOGOUT_COMPLETE, false, true));
 						break;
