@@ -31,5 +31,10 @@ package com.hydraframework.plugins.authentication.data.interfaces {
 		 * @return message with null payload
 		 */
 		function logout():void;
+		
+		/**
+		 * @return recordFactory that will create the appropriate Identity class for this implementation
+		 */
+		 function get recordFactory():Function;
 	}
 }

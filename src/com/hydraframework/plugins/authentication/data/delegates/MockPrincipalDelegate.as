@@ -4,6 +4,7 @@
  */
 package com.hydraframework.plugins.authentication.data.delegates
 {
+	import com.hydraframework.plugins.authentication.data.descriptors.Principal;
 	import com.hydraframework.plugins.authentication.data.interfaces.IPrincipal;
 	import com.hydraframework.plugins.authentication.data.interfaces.IPrincipalDelegate;
 	
@@ -32,6 +33,16 @@ package com.hydraframework.plugins.authentication.data.delegates
 			return _responder;
 		}
 		
+		private var _recordFactory:Function = function():Object {
+			var principal:IPrincipal = new Principal();
+
+			return principal;
+		}
+
+		public function get recordFactory():Function {
+			return _recordFactory;
+		}
+
 		public function MockPrincipalDelegate()
 		{
 			if (!mock_roleList)

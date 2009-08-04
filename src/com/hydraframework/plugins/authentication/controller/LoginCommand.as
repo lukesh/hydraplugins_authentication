@@ -40,7 +40,7 @@ package com.hydraframework.plugins.authentication.controller {
 			if (data is ResultEvent) {
 				currentUser = data.result as IIdentity;
 			} else if (data is IIdentity) {
-				currentUser = data;				
+				currentUser = IIdentity(data);				
 			}
 
 			this.facade.sendNotification(new Notification(AuthenticationManager.LOGIN, currentUser, Phase.RESPONSE));

@@ -6,16 +6,19 @@ package com.hydraframework.plugins.authentication {
 	import com.hydraframework.core.mvc.events.Notification;
 	import com.hydraframework.core.mvc.events.Phase;
 	import com.hydraframework.core.mvc.patterns.plugin.Plugin;
+	import com.hydraframework.core.registries.delegate.DelegateRegistry;
 	import com.hydraframework.plugins.authentication.controller.*;
 	import com.hydraframework.plugins.authentication.data.delegates.*;
 	import com.hydraframework.plugins.authentication.data.descriptors.Identity;
 	import com.hydraframework.plugins.authentication.data.descriptors.Principal;
 	import com.hydraframework.plugins.authentication.data.interfaces.IIdentity;
+	import com.hydraframework.plugins.authentication.data.interfaces.IIdentityDelegate;
 	import com.hydraframework.plugins.authentication.data.interfaces.ILoginInformation;
 	import com.hydraframework.plugins.authentication.data.interfaces.IPrincipal;
-
+	import com.hydraframework.plugins.authentication.data.interfaces.IPrincipalDelegate;
+	
 	import flash.events.Event;
-
+	
 	import mx.collections.ArrayCollection;
 
 	[Bindable]
@@ -64,6 +67,10 @@ package com.hydraframework.plugins.authentication {
 
 		[Bindable(event="plugins_Authentication_CurrentUserSet")]
 		public function get currentUser():IPrincipal {
+			if (_currentUser == null) {
+				_currentUser = this.principalDelegate.recordFactory();
+				_currentUser.identity = this.identityDelegate.recordFactory();
+			}
 			return _currentUser;
 		}
 
@@ -112,16 +119,29 @@ package com.hydraframework.plugins.authentication {
 			return AuthenticationManager.instance.currentUser.identity;
 		}
 
+		private var _identityDelegate:IIdentityDelegate;
+		
+		public function get identityDelegate():IIdentityDelegate {
+			if (_identityDelegate == null) {
+				_identityDelegate = IIdentityDelegate(DelegateRegistry.getInstance().retrieveDelegate(IIdentityDelegate));
+			}
+			return _identityDelegate;		
+		}
+		
+		private var _principalDelegate:IPrincipalDelegate;
+
+		public function get principalDelegate():IPrincipalDelegate {
+			if (_principalDelegate == null) {
+				_principalDelegate = IPrincipalDelegate(DelegateRegistry.getInstance().retrieveDelegate(IPrincipalDelegate));
+			}
+			return _principalDelegate;		
+		}
 		/*
 		   --------------------------------------------------------------------
 		 */
 
 		public function AuthenticationManager() {
 			super(NAME);
-			_currentUser=new Principal();
-			_currentUser.identity=new Identity();
-			_currentUser.identity.isAuthenticated=false;
-			_impersonator=null;
 		}
 
 		override public function preinitialize():void {
