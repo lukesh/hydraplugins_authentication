@@ -3,6 +3,7 @@
 	<name>hydraplugins_authentication</name>
 	<comment></comment>
 	<projects>
+		<project>hydraframework_core</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

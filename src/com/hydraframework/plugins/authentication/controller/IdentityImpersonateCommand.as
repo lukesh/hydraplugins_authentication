@@ -10,8 +10,8 @@ package com.hydraframework.plugins.authentication.controller {
 	import com.hydraframework.plugins.authentication.AuthenticationManager;
 	import com.hydraframework.plugins.authentication.data.interfaces.*;
 	
-	import mx.rpc.AsyncToken;
 	import mx.rpc.IResponder;
+	import mx.rpc.events.ResultEvent;
 
 	public class IdentityImpersonateCommand extends SimpleCommand implements IResponder {
 		public function get delegate():IIdentityDelegate {
@@ -33,8 +33,12 @@ package com.hydraframework.plugins.authentication.controller {
 		}
 
 		public function result(data:Object):void {
-			if (!(data.result)) {
-				this.facade.sendNotification(new Notification(AuthenticationManager.IDENTITY_IMPERSONATE, data.result, Phase.RESPONSE));
+			if (data is ResultEvent) {
+				if (!(data.result)) {
+					this.facade.sendNotification(new Notification(AuthenticationManager.IDENTITY_IMPERSONATE, data.result, Phase.RESPONSE));
+				}
+			} else {
+				this.facade.sendNotification(new Notification(AuthenticationManager.IDENTITY_IMPERSONATE, data, Phase.RESPONSE));
 			}
 		}
 

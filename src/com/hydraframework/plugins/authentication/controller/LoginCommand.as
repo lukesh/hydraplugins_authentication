@@ -8,13 +8,12 @@ package com.hydraframework.plugins.authentication.controller {
 	import com.hydraframework.core.mvc.interfaces.IFacade;
 	import com.hydraframework.core.mvc.patterns.command.SimpleCommand;
 	import com.hydraframework.plugins.authentication.AuthenticationManager;
-	import com.hydraframework.plugins.authentication.data.descriptors.LoginInformation;
+	import com.hydraframework.plugins.authentication.data.interfaces.IIdentity;
 	import com.hydraframework.plugins.authentication.data.interfaces.IIdentityDelegate;
 	import com.hydraframework.plugins.authentication.data.interfaces.ILoginInformation;
-	import com.hydraframework.plugins.authentication.data.interfaces.IIdentity;
-
-	import mx.rpc.AsyncToken;
+	
 	import mx.rpc.IResponder;
+	import mx.rpc.events.ResultEvent;
 
 	public class LoginCommand extends SimpleCommand implements IResponder {
 		public function get delegate():IIdentityDelegate {
@@ -36,8 +35,13 @@ package com.hydraframework.plugins.authentication.controller {
 		}
 
 		public function result(data:Object):void {
-			var currentUser:IIdentity=data.result as IIdentity;
-			currentUser.isAuthenticated=true;
+			var currentUser:IIdentity;
+			
+			if (data is ResultEvent) {
+				currentUser = data.result as IIdentity;
+			} else if (data is IIdentity) {
+				currentUser = IIdentity(data);				
+			}
 
 			this.facade.sendNotification(new Notification(AuthenticationManager.LOGIN, currentUser, Phase.RESPONSE));
 		}

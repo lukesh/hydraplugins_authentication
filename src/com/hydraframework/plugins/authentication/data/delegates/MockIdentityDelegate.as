@@ -4,6 +4,7 @@
  */
 package com.hydraframework.plugins.authentication.data.delegates {
 	import com.hydraframework.plugins.authentication.data.descriptors.Identity;
+	import com.hydraframework.plugins.authentication.data.interfaces.IIdentity;
 	import com.hydraframework.plugins.authentication.data.interfaces.IIdentityDelegate;
 	import com.hydraframework.plugins.authentication.data.interfaces.ILoginInformation;
 	
@@ -27,9 +28,20 @@ package com.hydraframework.plugins.authentication.data.delegates {
 			return _responder;
 		}
 
+		private var _recordFactory:Function = function():Object {
+			var identity:IIdentity = new Identity();
+
+			return identity;
+		}
+
+		public function get recordFactory():Function {
+			return _recordFactory;
+		}
+
 		public function MockIdentityDelegate() {
 		}
 
+		
 		public function login(loginInfo:ILoginInformation):void {
 			var asyncToken:AsyncToken=new AsyncToken(null);
 
