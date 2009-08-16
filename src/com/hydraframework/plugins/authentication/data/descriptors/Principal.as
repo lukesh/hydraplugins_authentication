@@ -2,105 +2,148 @@
    HydraFramework - Copyright (c) 2009 andCulture, Inc. Some rights reserved.
    Your reuse is governed by the Creative Commons Attribution 3.0 United States License
  */
-package com.hydraframework.plugins.authentication.data.descriptors {
+package com.hydraframework.plugins.authentication.data.descriptors
+{
 	import com.hydraframework.plugins.authentication.data.interfaces.IIdentity;
 	import com.hydraframework.plugins.authentication.data.interfaces.IPrincipal;
-
+	
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
-	import flash.events.IEventDispatcher;
 	import flash.utils.Dictionary;
-
+	
 	import mx.collections.ArrayCollection;
 
-	public class Principal extends EventDispatcher implements IPrincipal {
-		public function Principal(target:IEventDispatcher=null) {
-			super(target);
+	public class Principal extends EventDispatcher implements IPrincipal
+	{
+		public function Principal()
+		{
+			super();
 		}
 
 		private var _identity:IIdentity;
 
-		[Bindable(event="plugins_Authentication_identityChange")]
-		public function get identity():IIdentity {
-			return _identity;
+		[Bindable(event="identityChange")]
+		public function set identity(value:IIdentity):void
+		{
+			if (value != _identity)
+			{
+				_identity = value;
+				dispatchEvent(new Event("identityChange"));
+			}
 		}
 
-		public function set identity(value:IIdentity):void {
-			_identity=value;
-			this.dispatchEvent(new Event("plugins_Authentication_identityChange"));
+		public function get identity():IIdentity
+		{
+			return _identity;
 		}
 
 		private var _roles:ArrayCollection;
 
-		public function get roles():ArrayCollection {
+		[Bindable(event="rolesChange")]
+		public function set roles(value:ArrayCollection):void
+		{
+			if (value != _roles)
+			{
+				_roles = value;
+				dispatchEvent(new Event("rolesChange"));
+			}
+		}
+
+		public function get roles():ArrayCollection
+		{
 			return _roles;
 		}
-
-		public function set roles(value:ArrayCollection):void {
-			_roles=value;
-		}
-
+		
 		private var _dataRestrictions:Dictionary;
-
-		public function get dataRestrictions():Dictionary {
-			return _dataRestrictions;
+		[Bindable(event="dataRestrictionsChange")]
+		public function set dataRestrictions (value:Dictionary):void
+		{
+			if (value != _dataRestrictions)
+			{
+				_dataRestrictions = value;
+				dispatchEvent (new Event ("dataRestrictionsChange"));
+			}
 		}
 
-		public function set dataRestrictions(value:Dictionary):void {
-			_dataRestrictions=value;
+		public function get dataRestrictions ():Dictionary
+		{
+			return _dataRestrictions;
 		}
 
 		private var _impersonated:Boolean;
 
-		public function get impersonated():Boolean {
+		[Bindable(event="impersonatedChange")]
+		public function set impersonated(value:Boolean):void
+		{
+			if (value != _impersonated)
+			{
+				_impersonated = value;
+				dispatchEvent(new Event("impersonatedChange"));
+			}
+		}
+
+		public function get impersonated():Boolean
+		{
 			return _impersonated;
 		}
 
-		public function set impersonated(value:Boolean):void {
-			_impersonated=value;
+		private var _rolesLoaded:Boolean;
+
+		[Bindable(event="rolesLoadedChange")]
+		public function set rolesLoaded(value:Boolean):void
+		{
+			if (value != _rolesLoaded)
+			{
+				_rolesLoaded = value;
+				dispatchEvent(new Event("rolesLoadedChange"));
+			}
 		}
 
-
-		private var _rolesLoaded:Boolean=false;
-
-		public function get rolesLoaded():Boolean {
+		public function get rolesLoaded():Boolean
+		{
 			return _rolesLoaded;
 		}
 
-		public function set rolesLoaded(value:Boolean):void {
-			_rolesLoaded=value;
+		private var _dataRestrictionsLoaded:Boolean;
+
+		[Bindable(event="dataRestrictionsLoadedChange")]
+		public function set dataRestrictionsLoaded(value:Boolean):void
+		{
+			if (value != _dataRestrictionsLoaded)
+			{
+				_dataRestrictionsLoaded = value;
+				dispatchEvent(new Event("dataRestrictionsLoadedChange"));
+			}
 		}
 
-		private var _dataRestrictionsLoaded:Boolean=false;
-
-		public function get dataRestrictionsLoaded():Boolean {
+		public function get dataRestrictionsLoaded():Boolean
+		{
 			return _dataRestrictionsLoaded;
 		}
 
-		public function set dataRestrictionsLoaded(value:Boolean):void {
-			_dataRestrictionsLoaded=value;
-		}
-
-		public function isInRole(roleName:String):Boolean {
-			if (roles.toArray().indexOf(roleName) != -1) {
+		public function isInRole(roleName:String):Boolean
+		{
+			if (roles.toArray().indexOf(roleName) != -1)
+			{
 				return true;
 			}
 
 			return false;
 		}
 
-		public function getDataRestrictionValues(restrictionName:String):ArrayCollection {
-			return dataRestrictions[restrictionName];
+		public function getDataRestrictionValues(dataRestrictionName:String):ArrayCollection
+		{
+			return dataRestrictions[dataRestrictionName];
 		}
 
-		public function clear():void {
-			_roles=null;
-			_dataRestrictions=null;
-			_rolesLoaded=false;
-			_dataRestrictionsLoaded=false;
-			//identity.clear();
-			identity=new Identity();
-			identity.isAuthenticated=false;
+		public function clear():void
+		{
+			roles = null;
+			dataRestrictions = null;
+			rolesLoaded = false;
+			dataRestrictionsLoaded = false;
+			identity = new Identity();
+			identity.authenticated = false;
 		}
 	}
 }

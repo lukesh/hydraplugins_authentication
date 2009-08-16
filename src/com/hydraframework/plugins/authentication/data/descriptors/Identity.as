@@ -11,52 +11,72 @@ package com.hydraframework.plugins.authentication.data.descriptors {
 	import flash.utils.Dictionary;
 
 	public class Identity extends EventDispatcher implements IIdentity {
-		public function Identity(target:IEventDispatcher=null) {
-			super(target);
+		public function Identity() {
+			super();
 		}
 
 		private var _userId:String;
+		[Bindable(event="userIdChange")]
+		public function set userId (value:String):void
+		{
+			if (value != _userId)
+			{
+				_userId = value;
+				dispatchEvent (new Event ("userIdChange"));
+			}
+		}
 
-		public function get userId():String {
+		public function get userId ():String
+		{
 			return _userId;
 		}
 
-		public function set userId(value:String):void {
-			_userId=value;
+		private var _displayName:String;
+		[Bindable(event="displayNameChange")]
+		public function set displayName (value:String):void
+		{
+			if (value != _displayName)
+			{
+				_displayName = value;
+				dispatchEvent (new Event ("displayNameChange"));
+			}
 		}
 
-		private var _displayName:String;
-
-		[Bindable(event="plugins_Authentication_displayNameChange")]
-		public function get displayName():String {
+		public function get displayName ():String
+		{
 			return _displayName;
 		}
 
-		public function set displayName(value:String):void {
-			_displayName=value;
-			this.dispatchEvent(new Event("plugins_Authentication_displayNameChange"));
+		private var _attributes:Dictionary;
+		[Bindable(event="attributesChange")]
+		public function set attributes (value:Dictionary):void
+		{
+			if (value != _attributes)
+			{
+				_attributes = value;
+				dispatchEvent (new Event ("attributesChange"));
+			}
 		}
 
-		private var _attributes:Dictionary;
-
-		public function get attributes():Dictionary {
+		public function get attributes ():Dictionary
+		{
 			return _attributes;
 		}
 
-		public function set attributes(value:Dictionary):void {
-			_attributes=value;
+		private var _authenticated:Boolean;
+		[Bindable(event="authenticatedChange")]
+		public function set authenticated (value:Boolean):void
+		{
+			if (value != _authenticated)
+			{
+				_authenticated = value;
+				dispatchEvent (new Event ("authenticatedChange"));
+			}
 		}
 
-		private var _isAuthenticated:Boolean=false;
-
-		[Bindable(event="plugins_Authentication_isAuthenticatedChange")]
-		public function get isAuthenticated():Boolean {
-			return _isAuthenticated;
-		}
-
-		public function set isAuthenticated(value:Boolean):void {
-			_isAuthenticated=value;
-			this.dispatchEvent(new Event("plugins_Authentication_isAuthenticatedChange"));
+		public function get authenticated ():Boolean
+		{
+			return _authenticated;
 		}
 
 		public function getAttribute(attributeName:String):Object {
@@ -64,10 +84,10 @@ package com.hydraframework.plugins.authentication.data.descriptors {
 		}
 
 		public function clear():void {
-			_attributes=null;
-			_displayName=null;
-			_userId=null;
-			isAuthenticated=false;
+			attributes=null;
+			displayName=null;
+			userId=null;
+			authenticated=false;
 		}
 	}
 }

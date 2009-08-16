@@ -59,7 +59,7 @@ package com.hydraframework.plugins.authentication.data.delegates {
 			var fakeIdentity:Identity = new Identity();
 			fakeIdentity.userId = "ABC123";
 			fakeIdentity.displayName = "Fake ID";
-			fakeIdentity.authenticated = true;
+			fakeIdentity.isAuthenticated = true;
 			mockIdentityDictionary[fakeIdentity.userId] = fakeIdentity;
 
 			asyncToken.addResponder(new Responder(function(data:Object):void {

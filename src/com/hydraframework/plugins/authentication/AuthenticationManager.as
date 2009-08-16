@@ -1,261 +1,97 @@
-/*
-   HydraFramework - Copyright (c) 2009 andCulture, Inc. Some rights reserved.
-   Your reuse is governed by the Creative Commons Attribution 3.0 United States License
- */
-package com.hydraframework.plugins.authentication {
-	import com.hydraframework.core.mvc.events.Notification;
-	import com.hydraframework.core.mvc.events.Phase;
+package com.hydraframework.plugins.authentication
+{
 	import com.hydraframework.core.mvc.patterns.plugin.Plugin;
-	import com.hydraframework.core.registries.delegate.DelegateRegistry;
-	import com.hydraframework.plugins.authentication.controller.*;
-	import com.hydraframework.plugins.authentication.data.delegates.*;
-	import com.hydraframework.plugins.authentication.data.descriptors.Identity;
-	import com.hydraframework.plugins.authentication.data.descriptors.Principal;
-	import com.hydraframework.plugins.authentication.data.interfaces.IIdentity;
-	import com.hydraframework.plugins.authentication.data.interfaces.IIdentityDelegate;
-	import com.hydraframework.plugins.authentication.data.interfaces.ILoginInformation;
-	import com.hydraframework.plugins.authentication.data.interfaces.IPrincipal;
-	import com.hydraframework.plugins.authentication.data.interfaces.IPrincipalDelegate;
+	import com.hydraframework.plugins.authentication.data.interfaces.ISecurityContext;
+	import com.hydraframework.plugins.authentication.securitycontext.SecurityContext;
+	import com.hydraframework.plugins.authentication.securitycontext.events.SecurityContextEvent;
 	
 	import flash.events.Event;
 	
 	import mx.collections.ArrayCollection;
 
-	[Bindable]
-	public class AuthenticationManager extends Plugin {
-		/**
-		 * Notes
-		 */
-		public static const NAME:String="AuthenticationManager";
-		public static const LOGIN:String="plugins.authentication.login";
-		public static const LOGOUT:String="plugins.authentication.logout";
-		public static const ROLE_CHECK:String="plugins.authentication.roleCheck";
-		public static const IDENTITY_IMPERSONATE:String="plugins.authentication.identityImpersonate";
+	public class AuthenticationManager extends Plugin
+	{
 
-		/**
-		 * Internal Notes
-		 */
-		public static const ROLE_RETRIEVE:String="plugins.authentication.roleRetrieve";
-		public static const RESTRICTION_RETRIEVE:String="plugins.authentication.restrictionRetrieve";
-		public static const IDENTITY_RETRIEVE:String="plugins.authentication.identityRetrieve";
-
-		/**
-		 * Events
-		 *
-		 */
-		public static const ROLE_CHECK_COMPLETE:String="plugins.authentication.roleCheckComplete";
-		public static const LOGIN_COMPLETE:String="plugins.authentication.loginComplete";
-		public static const LOGOUT_COMPLETE:String="plugins.authentication.logoutComplete";
-		public static const IMPERSONATION_COMPLETE:String="plugins.authentication.impersonationComplete";
-		public static const CURRENT_USER_SET:String="plugins_Authentication_CurrentUserSet";
-		public static const IMPERSONATOR_SET:String="plugins_Authentication_ImpersonatorSet";
+		public static const NAME:String = "plugins.authentication.AuthenticationManager";
 
 		/**
 		 * @private
 		 * Cached instance of the AuthenticationManager.
 		 */
-		private static const _instance:AuthenticationManager=new AuthenticationManager();
+		private static const _instance:AuthenticationManager = new AuthenticationManager();
 
 		/**
 		 * Returns a cached instance of the AuthenticationManager.
 		 */
-		public static function get instance():AuthenticationManager {
+		public static function get instance():AuthenticationManager
+		{
 			return _instance;
 		}
 
-		private var _currentUser:IPrincipal;
+		private var _securityContexts:ArrayCollection;
 
-		[Bindable(event="plugins_Authentication_CurrentUserSet")]
-		public function get currentUser():IPrincipal {
-			if (_currentUser == null) {
-				_currentUser = this.principalDelegate.recordFactory();
-				_currentUser.identity = this.identityDelegate.recordFactory();
+		[Bindable(event="securityContextsChange")]
+		public function set securityContexts(value:ArrayCollection):void
+		{
+			if (value != _securityContexts)
+			{
+				_securityContexts = value;
+				dispatchEvent(new Event("securityContextsChange"));
 			}
-			return _currentUser;
 		}
 
-		public function set currentUser(value:IPrincipal):void {
-			_currentUser=value;
-			// Dispatching event for contingent property "isLoggedOn"
-			this.dispatchEvent(new Event("plugins_Authentication_isAuthenticatedChange"));
-			// Dispatching event for contingent property "identity"
-			this.dispatchEvent(new Event("plugins_Authentication_identityChange"));
-			this.dispatchEvent(new Event(CURRENT_USER_SET));
+		public function get securityContexts():ArrayCollection
+		{
+			return _securityContexts;
 		}
 
-		private var _impersonator:IPrincipal;
+		private var _currentSecurityContext:ISecurityContext;
 
-		[Bindable(event="plugins_Authentication_ImpersonatorSet")]
-		public function get impersonator():IPrincipal {
-			return _impersonator;
-		}
-
-		public function set impersonator(value:IPrincipal):void {
-			_impersonator=value;
-			this.dispatchEvent(new Event(IMPERSONATOR_SET));
-		}
-
-		/*
-		   --------------------------------------------------------------------
-
-		   The following properties are bindable, however depend on binding
-		   events in a seperate binding chain. Therefore, the local property
-		   that participates in that chain must be responsible for dispatching
-		   this change event along with its own.
-
-		 */
-
-		[Bindable(event="plugins_Authentication_isAuthenticatedChange")]
-		public function get isLoggedOn():Boolean {
-			// AuthenticationManager.instance.currentUser must dispatch this
-			// change event.
-			return AuthenticationManager.instance.currentUser.identity.isAuthenticated;
-		}
-
-		[Bindable(event="plugins_Authentication_identityChange")]
-		public function get identity():IIdentity {
-			// AuthenticationManager.instance.currentUser must dispatch this
-			// change event.
-			return AuthenticationManager.instance.currentUser.identity;
-		}
-
-		private var _identityDelegate:IIdentityDelegate;
-		
-		public function get identityDelegate():IIdentityDelegate {
-			if (_identityDelegate == null) {
-				_identityDelegate = IIdentityDelegate(DelegateRegistry.getInstance().retrieveDelegate(IIdentityDelegate));
+		[Bindable(event="currentSecurityContextChange")]
+		public function set currentSecurityContext(value:ISecurityContext):void
+		{
+			if (value != _currentSecurityContext)
+			{
+				if (_currentSecurityContext)
+				{
+					_currentSecurityContext.removeEventListener(SecurityContextEvent.LOGIN_COMPLETE, handleLoginComplete);
+				}
+				_currentSecurityContext = value;
+				_currentSecurityContext.addEventListener(SecurityContextEvent.LOGIN_COMPLETE, handleLoginComplete);
+				dispatchEvent(new Event("currentSecurityContextChange"));
 			}
-			return _identityDelegate;		
 		}
-		
-		private var _principalDelegate:IPrincipalDelegate;
 
-		public function get principalDelegate():IPrincipalDelegate {
-			if (_principalDelegate == null) {
-				_principalDelegate = IPrincipalDelegate(DelegateRegistry.getInstance().retrieveDelegate(IPrincipalDelegate));
-			}
-			return _principalDelegate;		
+		public function get currentSecurityContext():ISecurityContext
+		{
+			return _currentSecurityContext;
 		}
-		/*
-		   --------------------------------------------------------------------
-		 */
 
-		public function AuthenticationManager() {
+
+		public function AuthenticationManager()
+		{
 			super(NAME);
 		}
 
-		override public function preinitialize():void {
+		override public function initialize():void
+		{
+			super.initialize();
+			this.securityContexts.addItem(new SecurityContext());
+			this.currentSecurityContext = ISecurityContext(this.securityContexts.getItemAt(0));
+		}
+
+		override public function preinitialize():void
+		{
 			super.preinitialize();
-			/*
-			   Delegates
-			 */
-			this.facade.registerDelegate(MockIdentityDelegate);
-			this.facade.registerDelegate(MockPrincipalDelegate);
-			/*
-			   Proxies
-			 */
-
-			/*
-			   Commands
-			 */
-			this.facade.registerCommand(AuthenticationManager.LOGIN, LoginCommand);
-			this.facade.registerCommand(AuthenticationManager.LOGOUT, LogoutCommand);
-			this.facade.registerCommand(AuthenticationManager.ROLE_CHECK, RoleCheckCommand);
-			this.facade.registerCommand(AuthenticationManager.ROLE_RETRIEVE, RoleRetrieveCommand);
-			this.facade.registerCommand(AuthenticationManager.RESTRICTION_RETRIEVE, RestrictionRetrieveCommand);
-			this.facade.registerCommand(AuthenticationManager.IDENTITY_IMPERSONATE, IdentityImpersonateCommand);
 		}
-
-		override public function handleNotification(notification:Notification):void {
-
-			trace("AuthenticationManager.handleNotification", notification.name, "::", notification.phase);
-
-			if (notification.isResponse()) {
-				var roleUser:IPrincipal;
-				switch (notification.name) {
-					case AuthenticationManager.IDENTITY_IMPERSONATE:
-						if (notification.body is IIdentity) {
-							var newUser:IPrincipal = principalDelegate.recordFactory();
-							newUser.identity=notification.body as IIdentity;
-							this.sendNotification(new Notification(AuthenticationManager.ROLE_RETRIEVE, newUser, Phase.REQUEST));
-						} else {
-							currentUser.clear();
-							this.dispatchEvent(new AuthenticationEvent(AuthenticationManager.LOGIN_COMPLETE, false, true));
-						}
-						break;
-					case AuthenticationManager.LOGIN:
-						if (notification.body is IIdentity) {
-							currentUser.identity=notification.body as IIdentity;
-							this.sendNotification(new Notification(AuthenticationManager.ROLE_RETRIEVE, currentUser, Phase.REQUEST));
-								//this.dispatchEvent(new AuthenticationEvent(AuthenticationManager.LOGIN_COMPLETE, true, true));
-						} else {
-							currentUser.clear();
-							this.dispatchEvent(new AuthenticationEvent(AuthenticationManager.LOGIN_COMPLETE, false, true));
-						}
-						break;
-					case AuthenticationManager.LOGOUT:
-						var blankUser:IPrincipal = principalDelegate.recordFactory();
-						blankUser.identity = identityDelegate.recordFactory();
-						currentUser=blankUser;
-						impersonator=null;
-						this.dispatchEvent(new AuthenticationEvent(AuthenticationManager.LOGOUT_COMPLETE, false, true));
-						break;
-					case AuthenticationManager.ROLE_RETRIEVE:
-						if (notification.body is IPrincipal) {
-							roleUser=notification.body as IPrincipal;
-							if (roleUser.identity.isAuthenticated) {
-								currentUser=roleUser;
-							}
-							this.sendNotification(new Notification(AuthenticationManager.RESTRICTION_RETRIEVE, roleUser, Phase.REQUEST));
-						}
-						break;
-					case AuthenticationManager.RESTRICTION_RETRIEVE:
-						if (notification.body is IPrincipal) {
-							roleUser=notification.body as IPrincipal;
-							if (roleUser.identity.isAuthenticated) {
-								currentUser=roleUser;
-								this.dispatchEvent(new AuthenticationEvent(AuthenticationManager.LOGIN_COMPLETE, true, true));
-							} else {
-								setImpersonation(roleUser);
-							}
-						}
-						break;
-					case AuthenticationManager.ROLE_CHECK:
-						this.dispatchEvent(new AuthenticationEvent(AuthenticationManager.ROLE_CHECK_COMPLETE, Boolean(notification.body), true));
-						break;
-				}
-			}
-		}
-
-		public function login(loginInfo:ILoginInformation):void {
-			this.sendNotification(new Notification(AuthenticationManager.LOGIN, loginInfo, Phase.REQUEST));
-		}
-
-		public function isInRole(roleName:String):Boolean {
-			return AuthenticationManager.instance.currentUser.isInRole(roleName);
-		}
-
-		public function hasDataRestriction(dataRestrictionName:String):ArrayCollection {
-			return AuthenticationManager.instance.currentUser.getDataRestrictionValues(dataRestrictionName);
-		}
-
-		public function beginImpersonation(newUser:String):void {
-			this.sendNotification(new Notification(AuthenticationManager.IDENTITY_RETRIEVE, newUser, Phase.REQUEST));
-		}
-
-		private function setImpersonation(newPrincipal:IPrincipal):void {
-			if (!AuthenticationManager.instance.currentUser.impersonated) {
-				AuthenticationManager.instance.impersonator=AuthenticationManager.instance.currentUser;
-				AuthenticationManager.instance.currentUser=newPrincipal;
-				this.dispatchEvent(new AuthenticationEvent(AuthenticationManager.IMPERSONATION_COMPLETE, false, true));
-
-			}
-		}
-
-		public function endImpersonation():void {
-			if (!AuthenticationManager.instance.impersonator) {
-				AuthenticationManager.instance.currentUser=AuthenticationManager.instance.impersonator;
-				AuthenticationManager.instance.impersonator=null;
+		
+		private function handleLoginComplete(event:SecurityContextEvent):void
+		{
+			switch (event.type)
+			{
+				case SecurityContextEvent.LOGIN_COMPLETE:
+					this.dispatchEvent(new AuthenticationEvent(AuthenticationEvent.AUTHENTICATE, true));
+					break;
 			}
 		}
 

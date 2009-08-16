@@ -1,28 +1,25 @@
-/*
-   HydraFramework - Copyright (c) 2009 andCulture, Inc. Some rights reserved.
-   Your reuse is governed by the Creative Commons Attribution 3.0 United States License
- */
-package com.hydraframework.plugins.authentication.data.interfaces {
+package com.hydraframework.plugins.authentication.data.interfaces
+{
+	import flash.events.IEventDispatcher;
 	import flash.utils.Dictionary;
+	
+	public interface IIdentity extends IEventDispatcher
+	{
+		[Bindable(event="userIdChange")]
+		function set userId (value:String):void;
+		function get userId ():String;
+		[Bindable(event="displayNameChange")]
+		function set displayName (value:String):void;
+		function get displayName ():String;
+		[Bindable(event="attributesChange")]
+		function set attributes (value:Dictionary):void;
+		function get attributes ():Dictionary;
+		[Bindable(event="authenticatedChange")]
+		function set authenticated (value:Boolean):void;
+		function get authenticated ():Boolean;
 
-	import mx.collections.ArrayCollection;
-
-	[Bindable]
-	public interface IIdentity {
-		function get userId():String;
-		function set userId(value:String):void;
-		[Bindable(event="plugins_Authentication_displayNameChange")]
-		function get displayName():String;
-		function set displayName(value:String):void;
-		function get attributes():Dictionary;
-		function set attributes(value:Dictionary):void;
-		[Bindable(event="plugins_Authentication_isAuthenticatedChange")]
-		function get isAuthenticated():Boolean;
-		function set isAuthenticated(value:Boolean):void;
-
-		/* any other core attributes that would be common across hydra apps? */
-
-		function getAttribute(attributeName:String):Object;
+		
+		function getAttribute(attribute:String):Object;
 		function clear():void;
 	}
 }

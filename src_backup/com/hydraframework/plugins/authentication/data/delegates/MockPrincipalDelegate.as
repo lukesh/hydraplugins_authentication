@@ -7,10 +7,10 @@ package com.hydraframework.plugins.authentication.data.delegates
 	import com.hydraframework.plugins.authentication.data.descriptors.Principal;
 	import com.hydraframework.plugins.authentication.data.interfaces.IPrincipal;
 	import com.hydraframework.plugins.authentication.data.interfaces.IPrincipalDelegate;
-
+	
 	import flash.utils.Dictionary;
 	import flash.utils.setTimeout;
-
+	
 	import mx.collections.ArrayCollection;
 	import mx.core.mx_internal;
 	import mx.rpc.AsyncToken;
@@ -20,72 +20,68 @@ package com.hydraframework.plugins.authentication.data.delegates
 
 	public class MockPrincipalDelegate implements IPrincipalDelegate
 	{
-		public static var _mockRoleList:ArrayCollection;
-		public static var _mockDataRestrictions:Dictionary;
+		public static var mock_roleList:ArrayCollection;
+		public static var mock_dataRestrictions:Dictionary;
 
 		private var _responder:IResponder;
 
-		public function set responder(value:IResponder):void
-		{
-			_responder = value;
+		public function set responder(value:IResponder):void {
+			_responder=value;
 		}
 
-		public function get responder():IResponder
-		{
+		public function get responder():IResponder {
 			return _responder;
 		}
-
-		private var _recordFactory:Function = function():Object
-		{
+		
+		private var _recordFactory:Function = function():Object {
 			var principal:IPrincipal = new Principal();
 
 			return principal;
 		}
 
-		public function get recordFactory():Function
-		{
+		public function get recordFactory():Function {
 			return _recordFactory;
 		}
 
 		public function MockPrincipalDelegate()
 		{
-			if (!_mockRoleList)
+			if (!mock_roleList)
 			{
-				_mockRoleList = new ArrayCollection();
-				_mockRoleList.addItem("Administrator");
-				_mockRoleList.addItem("Developer");
-			}
+				mock_roleList=new ArrayCollection();
 
-			if (!_mockDataRestrictions)
+				mock_roleList.addItem("Administrator");
+				mock_roleList.addItem("Developer");
+			}
+			
+			if (!mock_dataRestrictions)
 			{
 				var dataRestrictionValues:ArrayCollection = new ArrayCollection();
 
-				_mockDataRestrictions = new Dictionary();
+				mock_dataRestrictions = new Dictionary();
+
 				dataRestrictionValues.addItem("Interactive");
-				dataRestrictionValues.addItem("Creative");
-				_mockDataRestrictions["Division"] = dataRestrictionValues;
-				_mockDataRestrictions["Status"] = "Exempt";
+ 				dataRestrictionValues.addItem("Creative");
+				mock_dataRestrictions["Division"] = dataRestrictionValues;
+				mock_dataRestrictions["Status"] = "Exempt";
 			}
 		}
 
 		public function retrieveRoles(user:IPrincipal):void
 		{
-			var asyncToken:AsyncToken = new AsyncToken(null);
+			var asyncToken:AsyncToken=new AsyncToken(null);
 
-			user.roles = _mockRoleList;
+			user.roles = mock_roleList;
 			user.rolesLoaded = true;
 
-			asyncToken.addResponder(new Responder(function(data:Object):void
-				{
-					//
-					// Transform / normalize response if necessary
-					//
+			asyncToken.addResponder(new Responder(function(data:Object):void {
+				//
+				// Transform / normalize response if necessary
+				//
 					responder.result(data);
-				}, function(info:Object):void
-				{
+				}, function(info:Object):void {
 					responder.fault(info);
 				}));
-
+				
 			setTimeout(function():void
 				{
 					asyncToken.mx_internal::applyResult(new ResultEvent(ResultEvent.RESULT, false, true, user, asyncToken, null));
@@ -94,22 +90,20 @@ package com.hydraframework.plugins.authentication.data.delegates
 
 		public function retrieveDataRestrictions(user:IPrincipal):void
 		{
-			var asyncToken:AsyncToken = new AsyncToken(null);
-
-			user.dataRestrictions = _mockDataRestrictions;
+			var asyncToken:AsyncToken=new AsyncToken(null);
+			
+			user.dataRestrictions = mock_dataRestrictions;
 			user.dataRestrictionsLoaded = true;
 
-			asyncToken.addResponder(new Responder(function(data:Object):void
-				{
-					//
-					// Transform / normalize response if necessary
-					//
+			asyncToken.addResponder(new Responder(function(data:Object):void {
+				//
+				// Transform / normalize response if necessary
+				//
 					responder.result(data);
-				}, function(info:Object):void
-				{
+				}, function(info:Object):void {
 					responder.fault(info);
 				}));
-
+				
 			setTimeout(function():void
 				{
 					asyncToken.mx_internal::applyResult(new ResultEvent(ResultEvent.RESULT, false, true, user, asyncToken, null));

@@ -3,12 +3,6 @@
 <includeClasses>
 <classEntry path="com.hydraframework.plugins.authentication.AuthenticationEvent"/>
 <classEntry path="com.hydraframework.plugins.authentication.AuthenticationManager"/>
-<classEntry path="com.hydraframework.plugins.authentication.controller.IdentityImpersonateCommand"/>
-<classEntry path="com.hydraframework.plugins.authentication.controller.LoginCommand"/>
-<classEntry path="com.hydraframework.plugins.authentication.controller.LogoutCommand"/>
-<classEntry path="com.hydraframework.plugins.authentication.controller.RestrictionRetrieveCommand"/>
-<classEntry path="com.hydraframework.plugins.authentication.controller.RoleCheckCommand"/>
-<classEntry path="com.hydraframework.plugins.authentication.controller.RoleRetrieveCommand"/>
 <classEntry path="com.hydraframework.plugins.authentication.data.delegates.MockIdentityDelegate"/>
 <classEntry path="com.hydraframework.plugins.authentication.data.delegates.MockPrincipalDelegate"/>
 <classEntry path="com.hydraframework.plugins.authentication.data.descriptors.Identity"/>
@@ -19,6 +13,15 @@
 <classEntry path="com.hydraframework.plugins.authentication.data.interfaces.ILoginInformation"/>
 <classEntry path="com.hydraframework.plugins.authentication.data.interfaces.IPrincipal"/>
 <classEntry path="com.hydraframework.plugins.authentication.data.interfaces.IPrincipalDelegate"/>
+<classEntry path="com.hydraframework.plugins.authentication.data.interfaces.ISecurityContext"/>
+<classEntry path="com.hydraframework.plugins.authentication.securitycontext.SecurityContext"/>
+<classEntry path="com.hydraframework.plugins.authentication.securitycontext.controller.IdentityImpersonateCommand"/>
+<classEntry path="com.hydraframework.plugins.authentication.securitycontext.controller.LoginCommand"/>
+<classEntry path="com.hydraframework.plugins.authentication.securitycontext.controller.LogoutCommand"/>
+<classEntry path="com.hydraframework.plugins.authentication.securitycontext.controller.RestrictionRetrieveCommand"/>
+<classEntry path="com.hydraframework.plugins.authentication.securitycontext.controller.RoleCheckCommand"/>
+<classEntry path="com.hydraframework.plugins.authentication.securitycontext.controller.RoleRetrieveCommand"/>
+<classEntry path="com.hydraframework.plugins.authentication.securitycontext.events.SecurityContextEvent"/>
 </includeClasses>
 <includeResources/>
 <namespaceManifests/>
