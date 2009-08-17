@@ -1,3 +1,7 @@
+/*
+   HydraFramework - Copyright (c) 2009 andCulture, Inc. Some rights reserved.
+   Your reuse is governed by the Creative Commons Attribution 3.0 United States License
+ */
 package com.hydraframework.plugins.authentication.securitycontext
 {
 	import com.hydraframework.core.mvc.events.Notification;
@@ -7,27 +11,27 @@ package com.hydraframework.plugins.authentication.securitycontext
 	import com.hydraframework.plugins.authentication.data.delegates.MockPrincipalDelegate;
 	import com.hydraframework.plugins.authentication.data.descriptors.LoginInformation;
 	import com.hydraframework.plugins.authentication.data.interfaces.IIdentity;
-	import com.hydraframework.plugins.authentication.data.interfaces.IIdentityDelegate;
 	import com.hydraframework.plugins.authentication.data.interfaces.IPrincipal;
 	import com.hydraframework.plugins.authentication.data.interfaces.IPrincipalDelegate;
-	import com.hydraframework.plugins.authentication.data.interfaces.ISecurityContext;
 	import com.hydraframework.plugins.authentication.securitycontext.controller.*;
 	import com.hydraframework.plugins.authentication.securitycontext.events.SecurityContextEvent;
+	import com.hydraframework.plugins.authentication.securitycontext.interfaces.ISecurityContext;
 	
 	import flash.events.Event;
 	
+	import mx.binding.utils.BindingUtils;
 	import mx.collections.ArrayCollection;
 
 	public class SecurityContext extends Facade implements ISecurityContext
 	{
 		public static const NAME:String = "plugins.authentication.SecurityContext";
-		
+
 		/*
 		   -----------------------------------------------------------------------
 		   NOTIFICATIONS
 		   -----------------------------------------------------------------------
 		 */
-		 
+
 		/**
 		 * Notes
 		 */
@@ -43,10 +47,16 @@ package com.hydraframework.plugins.authentication.securitycontext
 		public static const RESTRICTION_RETRIEVE:String = "plugins.authentication.restrictionRetrieve";
 		public static const IDENTITY_RETRIEVE:String = "plugins.authentication.identityRetrieve";
 
-		public function SecurityContext()
+		private var _principalDelegateClass:Class = MockPrincipalDelegate;
+		private var _identityDelegateClass:Class = MockIdentityDelegate;
+		
+		public function SecurityContext(principalDelegateClass:Class=null, identityDelegateClass:Class=null)
 		{
 			super(NAME);
+			_principalDelegateClass = principalDelegateClass || _principalDelegateClass;
+			_identityDelegateClass = identityDelegateClass || _identityDelegateClass;
 			initialize();
+			setCurrentUser(IPrincipalDelegate(this.retrieveDelegate(IPrincipalDelegate)).recordFactory());
 		}
 
 		/*
@@ -54,51 +64,72 @@ package com.hydraframework.plugins.authentication.securitycontext
 		   PUBLIC PROPERTIES
 		   -----------------------------------------------------------------------
 		 */
-		 
+
 		private var _currentUser:IPrincipal;
 
-		[Bindable(event="currentUserChange")]
-		public function set currentUser(value:IPrincipal):void
+		private function setCurrentUser(value:IPrincipal):void
 		{
 			if (value != _currentUser)
 			{
 				_currentUser = value;
+				BindingUtils.bindSetter(setIdentity, _currentUser, "identity");
 				dispatchEvent(new Event("currentUserChange"));
-				this.dispatchEvent(new SecurityContextEvent(SecurityContextEvent.CURRENT_USER_SET));
+
+				// Dispatch SecurityContextEvent (not required for databinding, but was present in previous API)
+				dispatchEvent(new SecurityContextEvent(SecurityContextEvent.CURRENT_USER_SET));
 			}
 		}
 
+		[Bindable(event="currentUserChange")]
 		public function get currentUser():IPrincipal
 		{
 			return _currentUser;
 		}
 
-		
-		[Bindable(event="identityChange")]
-		public function set identity (value:IIdentity):void
+		private var _identity:IIdentity;
+
+		private function setIdentity(value:IIdentity):void
 		{
-			if (currentUser && value != currentUser.identity)
+			if (_identity != value)
 			{
-				currentUser.identity = value;
-				dispatchEvent (new Event ("identityChange"));
+				_identity = value;
+				BindingUtils.bindSetter(setAuthenticated, _identity, "authenticated");
+				dispatchEvent(new Event("identityChange"));
 			}
 		}
 
-		public function get identity ():IIdentity
+		[Bindable(event="identityChange")]
+		public function get identity():IIdentity
 		{
-			return currentUser ? currentUser.identity : null;
+			return _identity;
+		}
+
+		private var _authenticated:Boolean;
+
+		private function setAuthenticated(value:Boolean):void
+		{
+			_authenticated = value;
+			dispatchEvent(new Event("authenticatedChange"));
+		}
+
+		[Bindable(event="authenticatedChange")]
+		public function get authenticated():Boolean
+		{
+			return _authenticated;
 		}
 
 		private var _impersonator:IPrincipal;
 
 		[Bindable(event="impersonatorChange")]
-		public function set impersonator(value:IPrincipal):void
+		private function setImpersonator(value:IPrincipal):void
 		{
 			if (value != _impersonator)
 			{
 				_impersonator = value;
 				dispatchEvent(new Event("impersonatorChange"));
-				this.dispatchEvent(new SecurityContextEvent(SecurityContextEvent.IMPERSONATOR_SET));
+				
+				// Dispatch SecurityContextEvent (not required for databinding, but was present in previous API)
+				dispatchEvent(new SecurityContextEvent(SecurityContextEvent.IMPERSONATOR_SET));
 			}
 		}
 
@@ -107,63 +138,22 @@ package com.hydraframework.plugins.authentication.securitycontext
 			return _impersonator;
 		}
 
-		private var _loggedOn:Boolean;
-
-		[Bindable(event="loggedOnChange")]
-		public function set loggedOn(value:Boolean):void
-		{
-			if (value != _loggedOn)
-			{
-				_loggedOn = value;
-				dispatchEvent(new Event("loggedOnChange"));
-			}
-		}
-
-		public function get loggedOn():Boolean
-		{
-			return _loggedOn;
-		}
-		
-		/*
-		   -----------------------------------------------------------------------
-		   PRIVATE PROPERTIES
-		   -----------------------------------------------------------------------
-		 */
-		 
-		private var _identityDelegate:IIdentityDelegate;
-
-		private function get identityDelegate():IIdentityDelegate {
-			if (_identityDelegate == null) {
-				_identityDelegate = IIdentityDelegate(this.retrieveDelegate(IIdentityDelegate));
-			}
-			return _identityDelegate;
-		}
-
-		private var _principalDelegate:IPrincipalDelegate;
-
-		private function get principalDelegate():IPrincipalDelegate {
-			if (_principalDelegate == null) {
-				_principalDelegate = IPrincipalDelegate(this.retrieveDelegate(IPrincipalDelegate));
-			}
-			return _principalDelegate;
-		}
-	
 		/*
 		   -----------------------------------------------------------------------
 		   PRIVATE METHODS
 		   -----------------------------------------------------------------------
 		 */
-		 
+
 		private function setImpersonation(newPrincipal:IPrincipal):void
 		{
 			if (!this.currentUser.impersonated)
 			{
-				this.impersonator = this.currentUser;
-				this.currentUser = newPrincipal;
+				this.setImpersonator(this.currentUser);
+				this.setCurrentUser(newPrincipal);
 				this.dispatchEvent(new SecurityContextEvent(SecurityContextEvent.IMPERSONATION_COMPLETE));
-			}	
+			}
 		}
-		
+
 		/*
 		   -----------------------------------------------------------------------
 		   PUBLIC METHODS
@@ -173,6 +163,11 @@ package com.hydraframework.plugins.authentication.securitycontext
 		public function login(loginInfo:LoginInformation):void
 		{
 			this.sendNotification(new Notification(SecurityContext.LOGIN, loginInfo, Phase.REQUEST));
+		}
+
+		public function logout():void
+		{
+			this.sendNotification(new Notification(SecurityContext.LOGOUT));
 		}
 
 		public function isInRole(roleName:String):Boolean
@@ -194,9 +189,9 @@ package com.hydraframework.plugins.authentication.securitycontext
 		{
 			if (this.impersonator)
 			{
-				this.currentUser = this.impersonator;
-				this.impersonator = null;
-			}	
+				this.setCurrentUser(this.impersonator);
+				this.setImpersonator(null);
+			}
 		}
 
 		override public function registerCore():void
@@ -204,8 +199,8 @@ package com.hydraframework.plugins.authentication.securitycontext
 			/*
 			   Delegates
 			 */
-			this.registerDelegate(MockIdentityDelegate);
-			this.registerDelegate(MockPrincipalDelegate);
+			this.registerDelegate(_identityDelegateClass);
+			this.registerDelegate(_principalDelegateClass);
 
 			/*
 			   Commands
@@ -230,9 +225,7 @@ package com.hydraframework.plugins.authentication.securitycontext
 					case SecurityContext.IDENTITY_IMPERSONATE:
 						if (notification.body is IIdentity)
 						{
-							var newUser:IPrincipal = principalDelegate.recordFactory();
-							newUser.identity = notification.body as IIdentity;
-							this.sendNotification(new Notification(SecurityContext.ROLE_RETRIEVE, newUser, Phase.REQUEST));
+							this.sendNotification(new Notification(SecurityContext.ROLE_RETRIEVE, IPrincipal(notification.body), Phase.REQUEST));
 						}
 						else
 						{
@@ -253,10 +246,8 @@ package com.hydraframework.plugins.authentication.securitycontext
 						}
 						break;
 					case SecurityContext.LOGOUT:
-						var blankUser:IPrincipal = principalDelegate.recordFactory();
-						blankUser.identity = identityDelegate.recordFactory();
-						currentUser = blankUser;
-						impersonator = null;
+						setCurrentUser(IPrincipal(notification.body));
+						setImpersonator(null);
 						this.dispatchEvent(new SecurityContextEvent(SecurityContextEvent.LOGOUT_COMPLETE, false, true));
 						break;
 					case SecurityContext.ROLE_RETRIEVE:
@@ -265,7 +256,7 @@ package com.hydraframework.plugins.authentication.securitycontext
 							roleUser = notification.body as IPrincipal;
 							if (roleUser.identity.authenticated)
 							{
-								currentUser = roleUser;
+								setCurrentUser(roleUser);
 							}
 							this.sendNotification(new Notification(SecurityContext.RESTRICTION_RETRIEVE, roleUser, Phase.REQUEST));
 						}
@@ -276,7 +267,7 @@ package com.hydraframework.plugins.authentication.securitycontext
 							roleUser = notification.body as IPrincipal;
 							if (roleUser.identity.authenticated)
 							{
-								currentUser = roleUser;
+								setCurrentUser(roleUser);
 								this.dispatchEvent(new SecurityContextEvent(SecurityContextEvent.LOGIN_COMPLETE, true, true));
 							}
 							else

@@ -1,3 +1,7 @@
+/*
+   HydraFramework - Copyright (c) 2009 andCulture, Inc. Some rights reserved.
+   Your reuse is governed by the Creative Commons Attribution 3.0 United States License
+ */
 package com.hydraframework.plugins.authentication.securitycontext.events
 {
 	import flash.events.Event;

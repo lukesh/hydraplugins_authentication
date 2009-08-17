@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <flexLibProperties version="1">
 <includeClasses>
-<classEntry path="com.hydraframework.plugins.authentication.AuthenticationEvent"/>
 <classEntry path="com.hydraframework.plugins.authentication.AuthenticationManager"/>
 <classEntry path="com.hydraframework.plugins.authentication.data.delegates.MockIdentityDelegate"/>
 <classEntry path="com.hydraframework.plugins.authentication.data.delegates.MockPrincipalDelegate"/>
@@ -13,7 +12,7 @@
 <classEntry path="com.hydraframework.plugins.authentication.data.interfaces.ILoginInformation"/>
 <classEntry path="com.hydraframework.plugins.authentication.data.interfaces.IPrincipal"/>
 <classEntry path="com.hydraframework.plugins.authentication.data.interfaces.IPrincipalDelegate"/>
-<classEntry path="com.hydraframework.plugins.authentication.data.interfaces.ISecurityContext"/>
+<classEntry path="com.hydraframework.plugins.authentication.events.AuthenticationEvent"/>
 <classEntry path="com.hydraframework.plugins.authentication.securitycontext.SecurityContext"/>
 <classEntry path="com.hydraframework.plugins.authentication.securitycontext.controller.IdentityImpersonateCommand"/>
 <classEntry path="com.hydraframework.plugins.authentication.securitycontext.controller.LoginCommand"/>
@@ -22,6 +21,7 @@
 <classEntry path="com.hydraframework.plugins.authentication.securitycontext.controller.RoleCheckCommand"/>
 <classEntry path="com.hydraframework.plugins.authentication.securitycontext.controller.RoleRetrieveCommand"/>
 <classEntry path="com.hydraframework.plugins.authentication.securitycontext.events.SecurityContextEvent"/>
+<classEntry path="com.hydraframework.plugins.authentication.securitycontext.interfaces.ISecurityContext"/>
 </includeClasses>
 <includeResources/>
 <namespaceManifests/>

@@ -16,7 +16,14 @@ package com.hydraframework.plugins.authentication.securitycontext.controller
 
 	public class IdentityImpersonateCommand extends SimpleCommand implements IResponder
 	{
-		public function get delegate():IIdentityDelegate
+		public function get principalDelegate():IPrincipalDelegate
+		{
+			var d:IPrincipalDelegate = this.facade.retrieveDelegate(IPrincipalDelegate) as IPrincipalDelegate;
+			d.responder = this;
+			return d;
+		}
+
+		public function get identityDelegate():IIdentityDelegate
 		{
 			var d:IIdentityDelegate = this.facade.retrieveDelegate(IIdentityDelegate) as IIdentityDelegate;
 			d.responder = this;
@@ -33,7 +40,7 @@ package com.hydraframework.plugins.authentication.securitycontext.controller
 			if (notification.isRequest())
 			{
 				var userId:String = notification.body as String;
-				this.delegate.retrieveInformation(userId);
+				this.identityDelegate.retrieveInformation(userId);
 			}
 
 		}
@@ -44,7 +51,9 @@ package com.hydraframework.plugins.authentication.securitycontext.controller
 			{
 				if (!(data.result))
 				{
-					this.facade.sendNotification(new Notification(SecurityContext.IDENTITY_IMPERSONATE, data.result, Phase.RESPONSE));
+					var blankUser:IPrincipal = principalDelegate.recordFactory();
+					blankUser.identity = IIdentity(data.result);
+					this.facade.sendNotification(new Notification(SecurityContext.IDENTITY_IMPERSONATE, blankUser, Phase.RESPONSE));
 				}
 			}
 			else

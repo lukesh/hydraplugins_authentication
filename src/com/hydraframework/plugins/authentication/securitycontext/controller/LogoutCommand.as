@@ -9,13 +9,22 @@ package com.hydraframework.plugins.authentication.securitycontext.controller
 	import com.hydraframework.core.mvc.interfaces.IFacade;
 	import com.hydraframework.core.mvc.patterns.command.SimpleCommand;
 	import com.hydraframework.plugins.authentication.data.interfaces.IIdentityDelegate;
+	import com.hydraframework.plugins.authentication.data.interfaces.IPrincipal;
+	import com.hydraframework.plugins.authentication.data.interfaces.IPrincipalDelegate;
 	import com.hydraframework.plugins.authentication.securitycontext.SecurityContext;
 	
 	import mx.rpc.IResponder;
 
 	public class LogoutCommand extends SimpleCommand implements IResponder
 	{
-		public function get delegate():IIdentityDelegate
+		public function get principalDelegate():IPrincipalDelegate
+		{
+			var d:IPrincipalDelegate = this.facade.retrieveDelegate(IPrincipalDelegate) as IPrincipalDelegate;
+			d.responder = this;
+			return d;
+		}
+
+		public function get identityDelegate():IIdentityDelegate
 		{
 			var d:IIdentityDelegate = this.facade.retrieveDelegate(IIdentityDelegate) as IIdentityDelegate;
 			d.responder = this;
@@ -31,13 +40,15 @@ package com.hydraframework.plugins.authentication.securitycontext.controller
 		{
 			if (notification.isRequest())
 			{
-				this.delegate.logout();
+				this.identityDelegate.logout();
 			}
 		}
 
 		public function result(data:Object):void
 		{
-			this.facade.sendNotification(new Notification(SecurityContext.LOGOUT, null, Phase.RESPONSE));
+			var blankUser:IPrincipal = IPrincipal(principalDelegate.recordFactory());
+			blankUser.identity = identityDelegate.recordFactory();
+			this.facade.sendNotification(new Notification(SecurityContext.LOGOUT, blankUser, Phase.RESPONSE));
 		}
 
 		public function fault(data:Object):void

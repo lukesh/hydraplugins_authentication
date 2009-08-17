@@ -2,13 +2,15 @@
    HydraFramework - Copyright (c) 2009 andCulture, Inc. Some rights reserved.
    Your reuse is governed by the Creative Commons Attribution 3.0 United States License
  */
-package com.hydraframework.plugins.authentication
+package com.hydraframework.plugins.authentication.events
 {
 	import flash.events.Event;
 
 	public class AuthenticationEvent extends Event
 	{
-		public static const AUTHENTICATE:String = "AuthenticationEvent.authenticate";
+		public static const LOGIN:String = "AuthenticationEvent.logout";
+		public static const LOGOUT:String = "AuthenticationEvent.logout";
+		
 		public var success:Boolean;
 
 		public function AuthenticationEvent(type:String, successValue:Boolean, bubbles:Boolean = false, cancelable:Boolean = false)

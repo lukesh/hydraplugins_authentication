@@ -6,29 +6,31 @@ package com.hydraframework.plugins.authentication.data.descriptors
 {
 	import com.hydraframework.plugins.authentication.data.interfaces.IIdentity;
 	import com.hydraframework.plugins.authentication.data.interfaces.IPrincipal;
-	
+
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.utils.Dictionary;
-	
-	import mx.collections.ArrayCollection;
 
+	import mx.collections.ArrayCollection;
+	import mx.events.PropertyChangeEvent;
+
+	[Bindable]
 	public class Principal extends EventDispatcher implements IPrincipal
 	{
 		public function Principal()
 		{
 			super();
+			identity = new Identity();
 		}
 
 		private var _identity:IIdentity;
 
-		[Bindable(event="identityChange")]
 		public function set identity(value:IIdentity):void
 		{
 			if (value != _identity)
 			{
 				_identity = value;
-				dispatchEvent(new Event("identityChange"));
+				dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, identity, null, value));
 			}
 		}
 
@@ -39,13 +41,12 @@ package com.hydraframework.plugins.authentication.data.descriptors
 
 		private var _roles:ArrayCollection;
 
-		[Bindable(event="rolesChange")]
 		public function set roles(value:ArrayCollection):void
 		{
 			if (value != _roles)
 			{
 				_roles = value;
-				dispatchEvent(new Event("rolesChange"));
+				dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, roles, null, value));
 			}
 		}
 
@@ -53,32 +54,31 @@ package com.hydraframework.plugins.authentication.data.descriptors
 		{
 			return _roles;
 		}
-		
+
 		private var _dataRestrictions:Dictionary;
-		[Bindable(event="dataRestrictionsChange")]
-		public function set dataRestrictions (value:Dictionary):void
+
+		public function set dataRestrictions(value:Dictionary):void
 		{
 			if (value != _dataRestrictions)
 			{
 				_dataRestrictions = value;
-				dispatchEvent (new Event ("dataRestrictionsChange"));
+				dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, dataRestrictions, null, value));
 			}
 		}
 
-		public function get dataRestrictions ():Dictionary
+		public function get dataRestrictions():Dictionary
 		{
 			return _dataRestrictions;
 		}
 
 		private var _impersonated:Boolean;
 
-		[Bindable(event="impersonatedChange")]
 		public function set impersonated(value:Boolean):void
 		{
 			if (value != _impersonated)
 			{
 				_impersonated = value;
-				dispatchEvent(new Event("impersonatedChange"));
+				dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, impersonated, null, value));
 			}
 		}
 
@@ -89,13 +89,12 @@ package com.hydraframework.plugins.authentication.data.descriptors
 
 		private var _rolesLoaded:Boolean;
 
-		[Bindable(event="rolesLoadedChange")]
 		public function set rolesLoaded(value:Boolean):void
 		{
 			if (value != _rolesLoaded)
 			{
 				_rolesLoaded = value;
-				dispatchEvent(new Event("rolesLoadedChange"));
+				dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, rolesLoaded, null, value));
 			}
 		}
 
@@ -106,13 +105,12 @@ package com.hydraframework.plugins.authentication.data.descriptors
 
 		private var _dataRestrictionsLoaded:Boolean;
 
-		[Bindable(event="dataRestrictionsLoadedChange")]
 		public function set dataRestrictionsLoaded(value:Boolean):void
 		{
 			if (value != _dataRestrictionsLoaded)
 			{
 				_dataRestrictionsLoaded = value;
-				dispatchEvent(new Event("dataRestrictionsLoadedChange"));
+				dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, dataRestrictionsLoaded, null, value));
 			}
 		}
 
