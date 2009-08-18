@@ -244,6 +244,7 @@ package com.hydraframework.plugins.authentication
 					break;
 				case SecurityContextEvent.LOGOUT_COMPLETE:
 					this.dispatchEvent(new AuthenticationEvent(AuthenticationEvent.LOGOUT, true));
+					break;
 			}
 		}
 

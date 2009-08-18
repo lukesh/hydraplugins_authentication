@@ -8,7 +8,7 @@ package com.hydraframework.plugins.authentication.events
 
 	public class AuthenticationEvent extends Event
 	{
-		public static const LOGIN:String = "AuthenticationEvent.logout";
+		public static const LOGIN:String = "AuthenticationEvent.login";
 		public static const LOGOUT:String = "AuthenticationEvent.logout";
 		
 		public var success:Boolean;
