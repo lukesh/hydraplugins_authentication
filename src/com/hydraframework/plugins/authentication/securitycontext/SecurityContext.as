@@ -234,7 +234,7 @@ package com.hydraframework.plugins.authentication.securitycontext
 						}
 						break;
 					case SecurityContext.LOGIN:
-						if (notification.body is IIdentity)
+						if (notification.body is IIdentity && (notification.body as IIdentity).authenticated)
 						{
 							currentUser.identity = notification.body as IIdentity;
 							this.sendNotification(new Notification(SecurityContext.ROLE_RETRIEVE, currentUser, Phase.REQUEST));
