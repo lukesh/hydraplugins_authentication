@@ -1,9 +1,10 @@
 /*
-   HydraFramework - Copyright (c) 2009 andCulture, Inc. Some rights reserved.
-   Your reuse is governed by the Creative Commons Attribution 3.0 United States License
- */
+HydraFramework - Copyright (c) 2009 andCulture, Inc. Some rights reserved.
+Your reuse is governed by the Creative Commons Attribution 3.0 United States License
+*/
 package com.hydraframework.plugins.authentication.securitycontext
 {
+	import com.hydraframework.core.hydraframework_internal;
 	import com.hydraframework.core.mvc.events.Notification;
 	import com.hydraframework.core.mvc.events.Phase;
 	import com.hydraframework.core.mvc.patterns.facade.Facade;
@@ -21,17 +22,19 @@ package com.hydraframework.plugins.authentication.securitycontext
 	
 	import mx.binding.utils.BindingUtils;
 	import mx.collections.ArrayCollection;
-
+	
+	use namespace hydraframework_internal;
+	
 	public class SecurityContext extends Facade implements ISecurityContext
 	{
 		public static const NAME:String = "plugins.authentication.SecurityContext";
-
+		
 		/*
-		   -----------------------------------------------------------------------
-		   NOTIFICATIONS
-		   -----------------------------------------------------------------------
-		 */
-
+		-----------------------------------------------------------------------
+		NOTIFICATIONS
+		-----------------------------------------------------------------------
+		*/
+		
 		/**
 		 * Notes
 		 */
@@ -39,14 +42,14 @@ package com.hydraframework.plugins.authentication.securitycontext
 		public static const LOGOUT:String = "plugins.authentication.logout";
 		public static const ROLE_CHECK:String = "plugins.authentication.roleCheck";
 		public static const IDENTITY_IMPERSONATE:String = "plugins.authentication.identityImpersonate";
-
+		
 		/**
 		 * Internal Notes
 		 */
 		public static const ROLE_RETRIEVE:String = "plugins.authentication.roleRetrieve";
 		public static const RESTRICTION_RETRIEVE:String = "plugins.authentication.restrictionRetrieve";
 		public static const IDENTITY_RETRIEVE:String = "plugins.authentication.identityRetrieve";
-
+		
 		private var _principalDelegateClass:Class = MockPrincipalDelegate;
 		private var _identityDelegateClass:Class = MockIdentityDelegate;
 		
@@ -58,15 +61,15 @@ package com.hydraframework.plugins.authentication.securitycontext
 			initialize();
 			setCurrentUser(IPrincipalDelegate(this.retrieveDelegate(IPrincipalDelegate)).recordFactory());
 		}
-
+		
 		/*
-		   -----------------------------------------------------------------------
-		   PUBLIC PROPERTIES
-		   -----------------------------------------------------------------------
-		 */
-
+		-----------------------------------------------------------------------
+		PUBLIC PROPERTIES
+		-----------------------------------------------------------------------
+		*/
+		
 		private var _currentUser:IPrincipal;
-
+		
 		private function setCurrentUser(value:IPrincipal):void
 		{
 			if (value != _currentUser)
@@ -74,20 +77,20 @@ package com.hydraframework.plugins.authentication.securitycontext
 				_currentUser = value;
 				BindingUtils.bindSetter(setIdentity, _currentUser, "identity");
 				dispatchEvent(new Event("currentUserChange"));
-
+				
 				// Dispatch SecurityContextEvent (not required for databinding, but was present in previous API)
 				dispatchEvent(new SecurityContextEvent(SecurityContextEvent.CURRENT_USER_SET));
 			}
 		}
-
+		
 		[Bindable(event="currentUserChange")]
 		public function get currentUser():IPrincipal
 		{
 			return _currentUser;
 		}
-
+		
 		private var _identity:IIdentity;
-
+		
 		private function setIdentity(value:IIdentity):void
 		{
 			if (_identity != value)
@@ -97,29 +100,29 @@ package com.hydraframework.plugins.authentication.securitycontext
 				dispatchEvent(new Event("identityChange"));
 			}
 		}
-
+		
 		[Bindable(event="identityChange")]
 		public function get identity():IIdentity
 		{
 			return _identity;
 		}
-
+		
 		private var _authenticated:Boolean;
-
+		
 		private function setAuthenticated(value:Boolean):void
 		{
 			_authenticated = value;
 			dispatchEvent(new Event("authenticatedChange"));
 		}
-
+		
 		[Bindable(event="authenticatedChange")]
 		public function get authenticated():Boolean
 		{
 			return _authenticated;
 		}
-
+		
 		private var _impersonator:IPrincipal;
-
+		
 		[Bindable(event="impersonatorChange")]
 		private function setImpersonator(value:IPrincipal):void
 		{
@@ -132,18 +135,18 @@ package com.hydraframework.plugins.authentication.securitycontext
 				dispatchEvent(new SecurityContextEvent(SecurityContextEvent.IMPERSONATOR_SET));
 			}
 		}
-
+		
 		public function get impersonator():IPrincipal
 		{
 			return _impersonator;
 		}
-
+		
 		/*
-		   -----------------------------------------------------------------------
-		   PRIVATE METHODS
-		   -----------------------------------------------------------------------
-		 */
-
+		-----------------------------------------------------------------------
+		PRIVATE METHODS
+		-----------------------------------------------------------------------
+		*/
+		
 		private function setImpersonation(newPrincipal:IPrincipal):void
 		{
 			if (!this.currentUser.impersonated)
@@ -153,38 +156,38 @@ package com.hydraframework.plugins.authentication.securitycontext
 				this.dispatchEvent(new SecurityContextEvent(SecurityContextEvent.IMPERSONATION_COMPLETE));
 			}
 		}
-
+		
 		/*
-		   -----------------------------------------------------------------------
-		   PUBLIC METHODS
-		   -----------------------------------------------------------------------
-		 */
-
+		-----------------------------------------------------------------------
+		PUBLIC METHODS
+		-----------------------------------------------------------------------
+		*/
+		
 		public function login(loginInfo:LoginInformation):void
 		{
 			this.sendNotification(new Notification(SecurityContext.LOGIN, loginInfo, Phase.REQUEST));
 		}
-
+		
 		public function logout():void
 		{
 			this.sendNotification(new Notification(SecurityContext.LOGOUT));
 		}
-
+		
 		public function isInRole(roleName:String):Boolean
 		{
 			return this.currentUser.isInRole(roleName);
 		}
-
+		
 		public function hasDataRestrictions(dataRestrictionName:String):ArrayCollection
 		{
 			return this.currentUser.getDataRestrictionValues(dataRestrictionName);
 		}
-
+		
 		public function beginImpersonation(newUserId:String):void
 		{
 			this.sendNotification(new Notification(SecurityContext.IDENTITY_IMPERSONATE, newUserId, Phase.REQUEST));
 		}
-
+		
 		public function endImpersonation():void
 		{
 			if (this.impersonator)
@@ -193,18 +196,18 @@ package com.hydraframework.plugins.authentication.securitycontext
 				this.setImpersonator(null);
 			}
 		}
-
+		
 		override public function registerCore():void
 		{
 			/*
-			   Delegates
-			 */
+			Delegates
+			*/
 			this.registerDelegate(_identityDelegateClass);
 			this.registerDelegate(_principalDelegateClass);
-
+			
 			/*
-			   Commands
-			 */
+			Commands
+			*/
 			this.registerCommand(SecurityContext.LOGIN, LoginCommand);
 			this.registerCommand(SecurityContext.LOGOUT, LogoutCommand);
 			this.registerCommand(SecurityContext.ROLE_CHECK, RoleCheckCommand);
@@ -212,11 +215,11 @@ package com.hydraframework.plugins.authentication.securitycontext
 			this.registerCommand(SecurityContext.RESTRICTION_RETRIEVE, RestrictionRetrieveCommand);
 			this.registerCommand(SecurityContext.IDENTITY_IMPERSONATE, IdentityImpersonateCommand);
 		}
-
+		
 		override public function handleNotification(notification:Notification):void
 		{
 			super.handleNotification(notification);
-
+			
 			if (notification.isResponse())
 			{
 				var roleUser:IPrincipal;
