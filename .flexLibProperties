@@ -6,10 +6,12 @@
     <classEntry path="com.hydraframework.plugins.authentication.data.delegates.MockPrincipalDelegate"/>
     <classEntry path="com.hydraframework.plugins.authentication.data.descriptors.Identity"/>
     <classEntry path="com.hydraframework.plugins.authentication.data.descriptors.LoginInformation"/>
+    <classEntry path="com.hydraframework.plugins.authentication.data.descriptors.LogoutInformation"/>
     <classEntry path="com.hydraframework.plugins.authentication.data.descriptors.Principal"/>
     <classEntry path="com.hydraframework.plugins.authentication.data.interfaces.IIdentity"/>
     <classEntry path="com.hydraframework.plugins.authentication.data.interfaces.IIdentityDelegate"/>
     <classEntry path="com.hydraframework.plugins.authentication.data.interfaces.ILoginInformation"/>
+    <classEntry path="com.hydraframework.plugins.authentication.data.interfaces.ILogoutInformation"/>
     <classEntry path="com.hydraframework.plugins.authentication.data.interfaces.IPrincipal"/>
     <classEntry path="com.hydraframework.plugins.authentication.data.interfaces.IPrincipalDelegate"/>
     <classEntry path="com.hydraframework.plugins.authentication.events.AuthenticationEvent"/>
