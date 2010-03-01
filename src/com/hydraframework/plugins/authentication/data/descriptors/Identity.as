@@ -9,6 +9,8 @@ package com.hydraframework.plugins.authentication.data.descriptors
 	import flash.events.EventDispatcher;
 	import flash.utils.Dictionary;
 	import flash.utils.setInterval;
+	
+	import mx.events.PropertyChangeEvent;
 
 	[Bindable]
 	public class Identity extends EventDispatcher implements IIdentity
