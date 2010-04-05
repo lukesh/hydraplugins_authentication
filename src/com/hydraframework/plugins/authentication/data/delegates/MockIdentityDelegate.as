@@ -29,13 +29,13 @@ package com.hydraframework.plugins.authentication.data.delegates {
 			return _mockIdentityDictionary;
 		}
 
-		private var _responder:IResponder;
+		private var _responder:*;
 
-		public function set responder(value:IResponder):void {
+		public function set responder(value:*):void {
 			_responder = value;
 		}
 
-		public function get responder():IResponder {
+		public function get responder():* {
 			return _responder;
 		}
 

@@ -54,7 +54,8 @@ package com.hydraframework.plugins.authentication.securitycontext {
 		private var _identityDelegateClass:Class = MockIdentityDelegate;
 
 		public function SecurityContext(principalDelegateClass:Class = null, identityDelegateClass:Class = null) {
-			super(NAME);
+			super();
+			setName(NAME);
 			_principalDelegateClass = principalDelegateClass || _principalDelegateClass;
 			_identityDelegateClass = identityDelegateClass || _identityDelegateClass;
 			initialize();
