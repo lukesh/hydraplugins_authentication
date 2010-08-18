@@ -214,7 +214,8 @@ package com.hydraframework.plugins.authentication.securitycontext {
 							this.sendNotification(new Notification(SecurityContext.ROLE_RETRIEVE, currentUser, Phase.REQUEST));
 						} else {
 							currentUser.clear();
-							this.dispatchEvent(new SecurityContextEvent(SecurityContextEvent.LOGIN_COMPLETE, false, true));
+							currentUser.identity = IIdentity(notification.body);
+							this.dispatchEvent(new SecurityContextEvent(SecurityContextEvent.LOGIN_COMPLETE, false, true, false));
 						}
 						break;
 					case SecurityContext.LOGOUT:

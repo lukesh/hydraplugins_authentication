@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<actionScriptProperties mainApplicationPath="hydraplugins_authentication.as" projectUUID="c7cdf614-cb41-4da0-b461-6601dcf6a2eb" version="6">
-  <compiler additionalCompilerArguments="" autoRSLOrdering="true" copyDependentFiles="false" flexSDK="Flex 3.3" generateAccessible="false" htmlExpressInstall="true" htmlGenerate="false" htmlHistoryManagement="false" htmlPlayerVersionCheck="true" includeNetmonSwc="false" outputFolderPath="bin" sourceFolderPath="src" strict="true" targetPlayerVersion="10.0.12" useApolloConfig="false" useDebugRSLSwfs="true" verifyDigests="true" warn="true">
+<actionScriptProperties analytics="false" mainApplicationPath="hydraplugins_authentication.as" projectUUID="c7cdf614-cb41-4da0-b461-6601dcf6a2eb" version="6">
+  <compiler additionalCompilerArguments="" autoRSLOrdering="true" copyDependentFiles="false" flexSDK="Flex 3.3" fteInMXComponents="false" generateAccessible="false" htmlExpressInstall="true" htmlGenerate="false" htmlHistoryManagement="false" htmlPlayerVersionCheck="true" includeNetmonSwc="false" outputFolderPath="bin" sourceFolderPath="src" strict="true" targetPlayerVersion="10.0.12" useApolloConfig="false" useDebugRSLSwfs="true" verifyDigests="true" warn="true">
     <compilerSourcePath/>
     <libraryPath defaultLinkType="1">
       <libraryPathEntry kind="4" path=""/>
