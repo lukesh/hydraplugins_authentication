@@ -23,11 +23,12 @@ package com.hydraframework.plugins.authentication.securitycontext {
 
 	import mx.binding.utils.BindingUtils;
 	import mx.collections.ArrayCollection;
+	import mx.controls.Alert;
 
 	use namespace hydraframework_internal;
 
 	public class SecurityContext extends Facade implements ISecurityContext {
-		public static const NAME:String = "plugins.authentication.SecurityContext";
+		public static const NAME:String                 = "plugins.authentication.SecurityContext";
 
 		/*
 		   -----------------------------------------------------------------------
@@ -38,20 +39,20 @@ package com.hydraframework.plugins.authentication.securitycontext {
 		/**
 		 * Notes
 		 */
-		public static const LOGIN:String = "plugins.authentication.login";
-		public static const LOGOUT:String = "plugins.authentication.logout";
-		public static const ROLE_CHECK:String = "plugins.authentication.roleCheck";
+		public static const LOGIN:String                = "plugins.authentication.login";
+		public static const LOGOUT:String               = "plugins.authentication.logout";
+		public static const ROLE_CHECK:String           = "plugins.authentication.roleCheck";
 		public static const IDENTITY_IMPERSONATE:String = "plugins.authentication.identityImpersonate";
 
 		/**
 		 * Internal Notes
 		 */
-		public static const ROLE_RETRIEVE:String = "plugins.authentication.roleRetrieve";
+		public static const ROLE_RETRIEVE:String        = "plugins.authentication.roleRetrieve";
 		public static const RESTRICTION_RETRIEVE:String = "plugins.authentication.restrictionRetrieve";
-		public static const IDENTITY_RETRIEVE:String = "plugins.authentication.identityRetrieve";
+		public static const IDENTITY_RETRIEVE:String    = "plugins.authentication.identityRetrieve";
 
-		private var _principalDelegateClass:Class = MockPrincipalDelegate;
-		private var _identityDelegateClass:Class = MockIdentityDelegate;
+		private var _principalDelegateClass:Class       = MockPrincipalDelegate;
+		private var _identityDelegateClass:Class        = MockIdentityDelegate;
 
 		public function SecurityContext(principalDelegateClass:Class = null, identityDelegateClass:Class = null) {
 			super();
@@ -246,6 +247,15 @@ package com.hydraframework.plugins.authentication.securitycontext {
 					case SecurityContext.ROLE_CHECK:
 						this.dispatchEvent(new SecurityContextEvent(SecurityContextEvent.ROLE_CHECK_COMPLETE, Boolean(notification.body), true));
 						break;
+				}
+			}
+			if (notification.isCancel()) {
+				switch (notification.name) {
+					case SecurityContext.LOGIN:  {
+						currentUser.clear();
+						this.dispatchEvent(new SecurityContextEvent(SecurityContextEvent.LOGIN_COMPLETE, false, true));
+						break;
+					}
 				}
 			}
 		}
