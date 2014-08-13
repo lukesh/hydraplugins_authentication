@@ -12,9 +12,10 @@ package com.hydraframework.plugins.authentication {
 	import com.hydraframework.plugins.authentication.securitycontext.SecurityContext;
 	import com.hydraframework.plugins.authentication.securitycontext.events.SecurityContextEvent;
 	import com.hydraframework.plugins.authentication.securitycontext.interfaces.ISecurityContext;
-
+	
 	import mx.binding.utils.BindingUtils;
 	import mx.collections.ArrayCollection;
+	import mx.controls.Alert;
 	import mx.events.PropertyChangeEvent;
 
 	public class AuthenticationManager extends Plugin {
@@ -169,7 +170,11 @@ package com.hydraframework.plugins.authentication {
 		}
 
 		public function login(loginInfo:LoginInformation):void {
-			_currentSecurityContext ? _currentSecurityContext.login(loginInfo) : null;
+			if(_currentSecurityContext == null){
+				Alert.show("Security Context is not set.  User cannot login.");
+				return;
+			}
+			_currentSecurityContext.login(loginInfo);
 		}
 
 		/**
@@ -180,7 +185,11 @@ package com.hydraframework.plugins.authentication {
 		public function logout(logoutInfo:ILogoutInformation = null):void {
 			if (authenticated) {
 				_logoutInformation = logoutInfo;
-				_currentSecurityContext ? _currentSecurityContext.logout() : null;
+				if(_currentSecurityContext == null){
+					Alert.show("Security Context is not set.  User cannot logout.");
+					return;
+				}
+				_currentSecurityContext.logout();
 			}
 		}
 
