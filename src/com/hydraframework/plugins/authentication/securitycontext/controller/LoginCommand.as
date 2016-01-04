@@ -47,6 +47,7 @@ package com.hydraframework.plugins.authentication.securitycontext.controller {
 		}
 
 		public function fault(data:Object):void {
+			this.facade.sendNotification(new Notification(SecurityContext.LOGIN, null, Phase.FAULT));
 		}
 	}
 }

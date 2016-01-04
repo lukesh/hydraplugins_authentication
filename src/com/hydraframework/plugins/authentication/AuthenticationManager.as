@@ -235,7 +235,7 @@ package com.hydraframework.plugins.authentication {
 		private function handleSecurityContextEvent(event:SecurityContextEvent):void {
 			switch (event.type) {
 				case SecurityContextEvent.LOGIN_COMPLETE:
-					this.dispatchEvent(new AuthenticationEvent(AuthenticationEvent.LOGIN, event.Success));
+					this.dispatchEvent(new AuthenticationEvent(AuthenticationEvent.LOGIN, event.Success, false, false, event.errors));
 					break;
 				case SecurityContextEvent.LOGOUT_COMPLETE:
 					this.dispatchEvent(new AuthenticationEvent(AuthenticationEvent.LOGOUT, true));

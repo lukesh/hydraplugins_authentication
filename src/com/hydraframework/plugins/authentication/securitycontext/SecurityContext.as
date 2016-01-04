@@ -194,8 +194,30 @@ package com.hydraframework.plugins.authentication.securitycontext {
 			this.registerCommand(SecurityContext.IDENTITY_IMPERSONATE, IdentityImpersonateCommand);
 		}
 
+		private function failedLogin(identity:IIdentity = null, failureMessage:String = null):void {
+			currentUser.clear();
+			currentUser.identity = identity;
+			this.dispatchEvent(new SecurityContextEvent(SecurityContextEvent.LOGIN_COMPLETE, false, true, false, failureMessage));
+		}
+
 		override public function handleNotification(notification:Notification):void {
 			super.handleNotification(notification);
+
+			if(notification.isCancel()){
+				switch (notification.name) {
+					case SecurityContext.LOGIN:
+						this.failedLogin();
+						break;
+				}
+			}
+
+			if(notification.isFault()){
+				switch (notification.name) {
+					case SecurityContext.LOGIN:
+						this.failedLogin(null, "Server error occurred");
+						break;
+				}
+			}
 
 			if (notification.isResponse()) {
 				var roleUser:IPrincipal;
@@ -213,9 +235,7 @@ package com.hydraframework.plugins.authentication.securitycontext {
 							currentUser.identity = notification.body as IIdentity;
 							this.sendNotification(new Notification(SecurityContext.ROLE_RETRIEVE, currentUser, Phase.REQUEST));
 						} else {
-							currentUser.clear();
-							currentUser.identity = IIdentity(notification.body);
-							this.dispatchEvent(new SecurityContextEvent(SecurityContextEvent.LOGIN_COMPLETE, false, true, false));
+							this.failedLogin(IIdentity(notification.body));
 						}
 						break;
 					case SecurityContext.LOGOUT:

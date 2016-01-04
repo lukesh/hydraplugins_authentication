@@ -15,10 +15,12 @@ package com.hydraframework.plugins.authentication.securitycontext.events {
 		public static const IMPERSONATION_COMPLETE:String = "SecurityContextEvent.impersonationComplete";
 
 		public var Success:Boolean;
+		public var errors:String;
 
-		public function SecurityContextEvent(type:String, bubbles:Boolean = false, cancelable:Boolean = false, success:Boolean = true) {
+		public function SecurityContextEvent(type:String, bubbles:Boolean = false, cancelable:Boolean = false, success:Boolean = true, errorsValue:String = null) {
 			super(type, bubbles, cancelable);
 			this.Success = success;
+			this.errors = errorsValue;
 		}
 
 		override public function clone():Event {
